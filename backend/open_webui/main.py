@@ -36,12 +36,7 @@ from starlette.responses import Response, StreamingResponse
 
 from open_webui.apps.audio.main import app as audio_app
 from open_webui.apps.images.main import app as images_app
-from open_webui.apps.ollama.main import (
-    app as ollama_app,
-    get_all_models as get_ollama_models,
-    generate_chat_completion as generate_ollama_chat_completion,
-    GenerateChatCompletionForm,
-)
+
 from open_webui.apps.openai.main import (
     app as openai_app,
     generate_chat_completion as generate_openai_chat_completion,
@@ -72,7 +67,6 @@ from open_webui.config import (
     DEFAULT_LOCALE,
     ENABLE_ADMIN_CHAT_ACCESS,
     ENABLE_ADMIN_EXPORT,
-    ENABLE_OLLAMA_API,
     ENABLE_OPENAI_API,
     ENABLE_TAGS_GENERATION,
     ENV,
@@ -115,11 +109,6 @@ from open_webui.utils.misc import (
     prepend_to_first_user_message_content,
 )
 from open_webui.utils.oauth import oauth_manager
-from open_webui.utils.payload import convert_payload_openai_to_ollama
-from open_webui.utils.response import (
-    convert_response_ollama_to_openai,
-    convert_streaming_response_ollama_to_openai,
-)
 from open_webui.utils.security_headers import SecurityHeadersMiddleware
 from open_webui.utils.task import (
     moa_response_generation_template,
@@ -161,14 +150,6 @@ class SPAStaticFiles(StaticFiles):
 
 print(
     rf"""
-  ___                    __        __   _     _   _ ___
- / _ \ _ __   ___ _ __   \ \      / /__| |__ | | | |_ _|
-| | | | '_ \ / _ \ '_ \   \ \ /\ / / _ \ '_ \| | | || |
-| |_| | |_) |  __/ | | |   \ V  V /  __/ |_) | |_| || |
- \___/| .__/ \___|_| |_|    \_/\_/ \___|_.__/ \___/|___|
-      |_|
-
-
 v{VERSION} - building the best open-source AI user interface.
 {f"Commit: {WEBUI_BUILD_HASH}" if WEBUI_BUILD_HASH != "dev-build" else ""}
 https://github.com/open-webui/open-webui
@@ -195,7 +176,6 @@ app = FastAPI(
 app.state.config = AppConfig()
 
 app.state.config.ENABLE_OPENAI_API = ENABLE_OPENAI_API
-app.state.config.ENABLE_OLLAMA_API = ENABLE_OLLAMA_API
 
 app.state.config.WEBHOOK_URL = WEBHOOK_URL
 
@@ -358,12 +338,9 @@ def get_task_model_id(
     # Set the task model
     task_model_id = default_model_id
     # Check if the user has a custom task model and use that model
-    if models[task_model_id]["owned_by"] == "ollama":
-        if task_model and task_model in models:
-            task_model_id = task_model
-    else:
-        if task_model_external and task_model_external in models:
-            task_model_id = task_model_external
+    
+    if task_model_external and task_model_external in models:
+        task_model_id = task_model_external
 
     return task_model_id
 
@@ -558,7 +535,7 @@ async def chat_completion_files_handler(
 def is_chat_completion_request(request):
     return request.method == "POST" and any(
         endpoint in request.url.path
-        for endpoint in ["/ollama/api/chat", "/chat/completions"]
+        for endpoint in ["/chat/completions"]
     )
 
 
@@ -722,22 +699,12 @@ class ChatCompletionMiddleware(BaseHTTPMiddleware):
                     f"With a 0 relevancy threshold for RAG, the context cannot be empty"
                 )
 
-            # Workaround for Ollama 2.0+ system prompt issue
-            # TODO: replace with add_or_update_system_message
-            if model["owned_by"] == "ollama":
-                body["messages"] = prepend_to_first_user_message_content(
-                    rag_template(
-                        retrieval_app.state.config.RAG_TEMPLATE, context_string, prompt
-                    ),
-                    body["messages"],
-                )
-            else:
-                body["messages"] = add_or_update_system_message(
-                    rag_template(
-                        retrieval_app.state.config.RAG_TEMPLATE, context_string, prompt
-                    ),
-                    body["messages"],
-                )
+            body["messages"] = add_or_update_system_message(
+                rag_template(
+                    retrieval_app.state.config.RAG_TEMPLATE, context_string, prompt
+                ),
+                body["messages"],
+            )
 
         # If there are citations, add them to the data_items
         sources = [
@@ -1012,7 +979,6 @@ async def inspect_websocket(request: Request, call_next):
 
 
 app.mount("/ws", socket_app)
-app.mount("/ollama", ollama_app)
 app.mount("/openai", openai_app)
 
 app.mount("/images/api/v1", images_app)
@@ -1027,29 +993,14 @@ webui_app.state.EMBEDDING_FUNCTION = retrieval_app.state.EMBEDDING_FUNCTION
 async def get_all_base_models():
     open_webui_models = []
     openai_models = []
-    ollama_models = []
 
     if app.state.config.ENABLE_OPENAI_API:
         openai_models = await get_openai_models()
         openai_models = openai_models["data"]
 
-    if app.state.config.ENABLE_OLLAMA_API:
-        ollama_models = await get_ollama_models()
-        ollama_models = [
-            {
-                "id": model["model"],
-                "name": model["name"],
-                "object": "model",
-                "created": int(time.time()),
-                "owned_by": "ollama",
-                "ollama": model,
-            }
-            for model in ollama_models["models"]
-        ]
-
     open_webui_models = await get_open_webui_models()
 
-    models = open_webui_models + openai_models + ollama_models
+    models = open_webui_models + openai_models 
     return models
 
 
@@ -1323,25 +1274,10 @@ async def generate_chat_completions(
         return await generate_function_chat_completion(
             form_data, user=user, models=models
         )
-    if model["owned_by"] == "ollama":
-        # Using /ollama/api/chat endpoint
-        form_data = convert_payload_openai_to_ollama(form_data)
-        form_data = GenerateChatCompletionForm(**form_data)
-        response = await generate_ollama_chat_completion(
-            form_data=form_data, user=user, bypass_filter=bypass_filter
-        )
-        if form_data.stream:
-            response.headers["content-type"] = "text/event-stream"
-            return StreamingResponse(
-                convert_streaming_response_ollama_to_openai(response),
-                headers=dict(response.headers),
-            )
-        else:
-            return convert_response_ollama_to_openai(response)
-    else:
-        return await generate_openai_chat_completion(
-            form_data, user=user, bypass_filter=bypass_filter
-        )
+    
+    return await generate_openai_chat_completion(
+        form_data, user=user, bypass_filter=bypass_filter
+    )
 
 
 @app.post("/api/chat/completed")
@@ -1760,9 +1696,7 @@ Artificial Intelligence in Healthcare
         "messages": [{"role": "user", "content": content}],
         "stream": False,
         **(
-            {"max_tokens": 50}
-            if models[task_model_id]["owned_by"] == "ollama"
-            else {
+            {
                 "max_completion_tokens": 50,
             }
         ),
@@ -1994,9 +1928,7 @@ Message: """{{prompt}}"""
         "messages": [{"role": "user", "content": content}],
         "stream": False,
         **(
-            {"max_tokens": 4}
-            if models[task_model_id]["owned_by"] == "ollama"
-            else {
+            {
                 "max_completion_tokens": 4,
             }
         ),

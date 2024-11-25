@@ -62,10 +62,8 @@ from open_webui.config import (
     CONTENT_EXTRACTION_ENGINE,
     CORS_ALLOW_ORIGIN,
     ENABLE_RAG_HYBRID_SEARCH,
-    ENABLE_RAG_LOCAL_WEB_FETCH,
     ENABLE_RAG_WEB_LOADER_SSL_VERIFICATION,
     ENABLE_RAG_WEB_SEARCH,
-    ENV,
     GOOGLE_PSE_API_KEY,
     GOOGLE_PSE_ENGINE_ID,
     PDF_EXTRACT_IMAGES,
@@ -78,13 +76,10 @@ from open_webui.config import (
     RAG_FILE_MAX_SIZE,
     RAG_OPENAI_API_BASE_URL,
     RAG_OPENAI_API_KEY,
-    RAG_OLLAMA_BASE_URL,
-    RAG_OLLAMA_API_KEY,
     RAG_RELEVANCE_THRESHOLD,
     RAG_RERANKING_MODEL,
     RAG_RERANKING_MODEL_AUTO_UPDATE,
     RAG_RERANKING_MODEL_TRUST_REMOTE_CODE,
-    DEFAULT_RAG_TEMPLATE,
     RAG_TEMPLATE,
     RAG_TOP_K,
     RAG_WEB_SEARCH_CONCURRENT_REQUESTS,
@@ -114,12 +109,7 @@ from open_webui.env import (
     DEVICE_TYPE,
     DOCKER,
 )
-from open_webui.utils.misc import (
-    calculate_sha256,
-    calculate_sha256_string,
-    extract_folders_after_data_docs,
-    sanitize_filename,
-)
+from open_webui.utils.misc import calculate_sha256_string
 from open_webui.utils.utils import get_admin_user, get_verified_user
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter, TokenTextSplitter
@@ -130,8 +120,8 @@ log = logging.getLogger(__name__)
 log.setLevel(SRC_LOG_LEVELS["RAG"])
 
 app = FastAPI(
-    docs_url="/docs" if ENV == "dev" else None,
-    openapi_url="/openapi.json" if ENV == "dev" else None,
+    docs_url="/docs",
+    openapi_url="/openapi.json",
     redoc_url=None,
 )
 
@@ -164,9 +154,6 @@ app.state.config.RAG_TEMPLATE = RAG_TEMPLATE
 
 app.state.config.OPENAI_API_BASE_URL = RAG_OPENAI_API_BASE_URL
 app.state.config.OPENAI_API_KEY = RAG_OPENAI_API_KEY
-
-app.state.config.OLLAMA_BASE_URL = RAG_OLLAMA_BASE_URL
-app.state.config.OLLAMA_API_KEY = RAG_OLLAMA_API_KEY
 
 app.state.config.PDF_EXTRACT_IMAGES = PDF_EXTRACT_IMAGES
 
@@ -267,16 +254,8 @@ app.state.EMBEDDING_FUNCTION = get_embedding_function(
     app.state.config.RAG_EMBEDDING_ENGINE,
     app.state.config.RAG_EMBEDDING_MODEL,
     app.state.sentence_transformer_ef,
-    (
-        app.state.config.OPENAI_API_BASE_URL
-        if app.state.config.RAG_EMBEDDING_ENGINE == "openai"
-        else app.state.config.OLLAMA_BASE_URL
-    ),
-    (
-        app.state.config.OPENAI_API_KEY
-        if app.state.config.RAG_EMBEDDING_ENGINE == "openai"
-        else app.state.config.OLLAMA_API_KEY
-    ),
+    app.state.config.OPENAI_API_BASE_URL,
+    app.state.config.OPENAI_API_KEY,        
     app.state.config.RAG_EMBEDDING_BATCH_SIZE,
 )
 
@@ -1474,13 +1453,10 @@ def reset_upload_dir(user=Depends(get_admin_user)) -> bool:
         print(f"Failed to process the directory {folder}. Reason: {e}")
     return True
 
+@app.get("/ef")
+async def get_embeddings():
+    return {"result": app.state.EMBEDDING_FUNCTION("hello world")}
 
-if ENV == "dev":
-
-    @app.get("/ef")
-    async def get_embeddings():
-        return {"result": app.state.EMBEDDING_FUNCTION("hello world")}
-
-    @app.get("/ef/{text}")
-    async def get_embeddings_text(text: str):
-        return {"result": app.state.EMBEDDING_FUNCTION(text)}
+@app.get("/ef/{text}")
+async def get_embeddings_text(text: str):
+    return {"result": app.state.EMBEDDING_FUNCTION(text)}
