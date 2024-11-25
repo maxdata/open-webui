@@ -3,8 +3,8 @@
 	"version": "0.4.4",
 	"private": true,
 	"scripts": {
-		"dev": "npm run vite dev --host",
-		"build": "npm run vite build",
+		"dev": "vite dev",
+		"build": "vite build",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -16,7 +16,7 @@
 		"format:backend": "black . --exclude \".venv/|/venv/\"",
 		"i18n:parse": "i18next --config i18next-parser.config.ts && prettier --write \"src/lib/i18n/**/*.{js,json}\"",
 		"cy:open": "cypress open",
-		"test:frontend": "vitest --passWithNoTests"		
+		"test:frontend": "vitest --passWithNoTests"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "3.2.2",
@@ -80,6 +80,7 @@
 		"idb": "^7.1.1",
 		"js-sha256": "^0.10.1",
 		"katex": "^0.16.9",
+		"lowlight": "^3.1.0",
 		"marked": "^9.1.0",
 		"mermaid": "^10.9.3",
 		"paneforge": "^0.0.6",
