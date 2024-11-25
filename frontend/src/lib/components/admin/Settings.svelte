@@ -22,7 +22,7 @@
 
 	const i18n = getContext('i18n');
 
-	let selectedTab = 'general';
+	let selectedTab = $state('general');
 
 	onMount(() => {
 		const containerElement = document.getElementById('admin-settings-tabs-container');
@@ -48,7 +48,7 @@
 			'general'
 				? ''
 				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-			on:click={() => {
+			onclick={() => {
 				selectedTab = 'general';
 			}}
 		>
@@ -74,7 +74,7 @@
 			'connections'
 				? ''
 				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-			on:click={() => {
+			onclick={() => {
 				selectedTab = 'connections';
 			}}
 		>
@@ -98,7 +98,7 @@
 			'models'
 				? ''
 				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-			on:click={() => {
+			onclick={() => {
 				selectedTab = 'models';
 			}}
 		>
@@ -124,7 +124,7 @@
 			'evaluations'
 				? ''
 				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-			on:click={() => {
+			onclick={() => {
 				selectedTab = 'evaluations';
 			}}
 		>
@@ -139,7 +139,7 @@
 			'documents'
 				? ''
 				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-			on:click={() => {
+			onclick={() => {
 				selectedTab = 'documents';
 			}}
 		>
@@ -169,7 +169,7 @@
 			'web'
 				? ''
 				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-			on:click={() => {
+			onclick={() => {
 				selectedTab = 'web';
 			}}
 		>
@@ -193,7 +193,7 @@
 			'interface'
 				? ''
 				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-			on:click={() => {
+			onclick={() => {
 				selectedTab = 'interface';
 			}}
 		>
@@ -219,7 +219,7 @@
 			'audio'
 				? ''
 				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-			on:click={() => {
+			onclick={() => {
 				selectedTab = 'audio';
 			}}
 		>
@@ -246,7 +246,7 @@
 			'images'
 				? ''
 				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-			on:click={() => {
+			onclick={() => {
 				selectedTab = 'images';
 			}}
 		>
@@ -272,7 +272,7 @@
 			'pipelines'
 				? ''
 				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-			on:click={() => {
+			onclick={() => {
 				selectedTab = 'pipelines';
 			}}
 		>
@@ -302,7 +302,7 @@
 			'db'
 				? ''
 				: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-			on:click={() => {
+			onclick={() => {
 				selectedTab = 'db';
 			}}
 		>

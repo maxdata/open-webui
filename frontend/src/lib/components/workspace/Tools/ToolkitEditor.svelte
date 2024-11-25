@@ -1,4 +1,6 @@
-<script>
+<script lang="ts">
+	import { run, preventDefault } from 'svelte/legacy';
+
 	import { getContext, createEventDispatcher, onMount, tick } from 'svelte';
 
 	const i18n = getContext('i18n');
@@ -14,38 +16,44 @@
 
 	const dispatch = createEventDispatcher();
 
-	let formElement = null;
+	let formElement = $state(null);
 	let loading = false;
 
-	let showConfirm = false;
-	let showAccessControlModal = false;
+	let showConfirm = $state(false);
+	let showAccessControlModal = $state(false);
 
-	export let edit = false;
-	export let clone = false;
 
-	export let id = '';
-	export let name = '';
-	export let meta = {
-		description: ''
-	};
-	export let content = '';
-	export let accessControl = null;
-
-	let _content = '';
-
-	$: if (content) {
-		updateContent();
+	interface Props {
+		edit?: boolean;
+		clone?: boolean;
+		id?: string;
+		name?: string;
+		meta?: any;
+		content?: string;
+		accessControl?: any;
 	}
+
+	let {
+		edit = false,
+		clone = false,
+		id = $bindable(''),
+		name = $bindable(''),
+		meta = $bindable({
+		description: ''
+	}),
+		content = $bindable(''),
+		accessControl = $bindable(null)
+	}: Props = $props();
+
+	let _content = $state('');
+
 
 	const updateContent = () => {
 		_content = content;
 	};
 
-	$: if (name && !edit && !clone) {
-		id = name.replace(/\s+/g, '_').toLowerCase();
-	}
 
-	let codeEditor;
+	let codeEditor = $state();
 	let boilerplate = `import os
 import requests
 from datetime import datetime
@@ -177,6 +185,16 @@ class Tools:
 			}
 		}
 	};
+	run(() => {
+		if (content) {
+			updateContent();
+		}
+	});
+	run(() => {
+		if (name && !edit && !clone) {
+			id = name.replace(/\s+/g, '_').toLowerCase();
+		}
+	});
 </script>
 
 <AccessControlModal bind:show={showAccessControlModal} bind:accessControl />
@@ -186,13 +204,13 @@ class Tools:
 		<form
 			bind:this={formElement}
 			class=" flex flex-col max-h-[100dvh] h-full"
-			on:submit|preventDefault={() => {
+			onsubmit={preventDefault(() => {
 				if (edit) {
 					submitHandler();
 				} else {
 					showConfirm = true;
 				}
-			}}
+			})}
 		>
 			<div class="flex flex-col flex-1 overflow-auto h-0">
 				<div class="w-full mb-2 flex flex-col gap-0.5">
@@ -201,7 +219,7 @@ class Tools:
 							<Tooltip content={$i18n.t('Back')}>
 								<button
 									class="w-full text-left text-sm py-1.5 px-1 rounded-lg dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-gray-850"
-									on:click={() => {
+									onclick={() => {
 										goto('/workspace/tools');
 									}}
 									type="button"
@@ -227,7 +245,7 @@ class Tools:
 							<button
 								class="bg-gray-50 hover:bg-gray-100 text-black dark:bg-gray-850 dark:hover:bg-gray-800 dark:text-white transition px-2 py-1 rounded-full flex gap-1 items-center"
 								type="button"
-								on:click={() => {
+								onclick={() => {
 									showAccessControlModal = true;
 								}}
 							>

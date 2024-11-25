@@ -15,10 +15,15 @@
 	import { goto } from '$app/navigation';
 
 	import MenuLines from '$lib/components/icons/MenuLines.svelte';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 
 	const i18n = getContext('i18n');
 
-	let loaded = false;
+	let loaded = $state(false);
 
 	onMount(async () => {
 		if ($user?.role !== 'admin') {
@@ -61,7 +66,7 @@
 					<button
 						id="sidebar-toggle-button"
 						class="cursor-pointer p-1.5 flex rounded-xl hover:bg-gray-100 dark:hover:bg-gray-850 transition"
-						on:click={() => {
+						onclick={() => {
 							showSidebar.set(!$showSidebar);
 						}}
 						aria-label="Toggle Sidebar"
@@ -129,7 +134,7 @@
 		</div>
 
 		<div class="  pb-1 px-[18px] flex-1 max-h-full overflow-y-auto" id="workspace-container">
-			<slot />
+			{@render children?.()}
 		</div>
 	</div>
 {/if}

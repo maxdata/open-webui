@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import { getBackendConfig, getWebhookUrl, updateWebhookUrl } from '$lib/apis';
 	import {
 		getAdminConfig,
@@ -17,14 +19,18 @@
 
 	const i18n = getContext('i18n');
 
-	export let saveHandler: Function;
+	interface Props {
+		saveHandler: Function;
+	}
 
-	let adminConfig = null;
-	let webhookUrl = '';
+	let { saveHandler }: Props = $props();
+
+	let adminConfig = $state(null);
+	let webhookUrl = $state('');
 
 	// LDAP
-	let ENABLE_LDAP = false;
-	let LDAP_SERVER = {
+	let ENABLE_LDAP = $state(false);
+	let LDAP_SERVER = $state({
 		label: '',
 		host: '',
 		port: '',
@@ -36,7 +42,7 @@
 		use_tls: false,
 		certificate_path: '',
 		ciphers: ''
-	};
+	});
 
 	const updateLdapServerHandler = async () => {
 		if (!ENABLE_LDAP) return;
@@ -82,9 +88,9 @@
 
 <form
 	class="flex flex-col h-full justify-between space-y-3 text-sm"
-	on:submit|preventDefault={async () => {
+	onsubmit={preventDefault(async () => {
 		updateHandler();
-	}}
+	})}
 >
 	<div class=" space-y-3 overflow-y-scroll scrollbar-hidden h-full">
 		{#if adminConfig !== null}

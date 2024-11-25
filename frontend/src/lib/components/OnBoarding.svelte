@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { getContext } from 'svelte';
 	const i18n = getContext('i18n');
 
@@ -8,8 +8,12 @@
 	import SlideShow from './common/SlideShow.svelte';
 	import ArrowRightCircle from './icons/ArrowRightCircle.svelte';
 
-	export let show = true;
-	export let getStartedHandler = () => {};
+	interface Props {
+		show?: boolean;
+		getStartedHandler?: any;
+	}
+
+	let { show = true, getStartedHandler = () => {} }: Props = $props();
 </script>
 
 {#if show}
@@ -61,7 +65,7 @@
 					<div class="flex flex-col justify-center items-center">
 						<button
 							class="relative z-20 flex p-1 rounded-full bg-white/5 hover:bg-white/10 transition font-medium text-sm"
-							on:click={() => {
+							onclick={() => {
 								getStartedHandler();
 							}}
 						>

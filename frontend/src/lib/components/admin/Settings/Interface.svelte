@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import { v4 as uuidv4 } from 'uuid';
 	import { toast } from 'svelte-sonner';
 
@@ -20,7 +22,7 @@
 
 	const i18n = getContext('i18n');
 
-	let taskConfig = {
+	let taskConfig = $state({
 		TASK_MODEL: '',
 		TASK_MODEL_EXTERNAL: '',
 		TITLE_GENERATION_PROMPT_TEMPLATE: '',
@@ -29,10 +31,10 @@
 		ENABLE_SEARCH_QUERY_GENERATION: true,
 		ENABLE_RETRIEVAL_QUERY_GENERATION: true,
 		QUERY_GENERATION_PROMPT_TEMPLATE: ''
-	};
+	});
 
-	let promptSuggestions = [];
-	let banners: Banner[] = [];
+	let promptSuggestions = $state([]);
+	let banners: Banner[] = $state([]);
 
 	const updateInterfaceHandler = async () => {
 		taskConfig = await updateTaskConfig(localStorage.token, taskConfig);
@@ -57,10 +59,10 @@
 
 <form
 	class="flex flex-col h-full justify-between space-y-3 text-sm"
-	on:submit|preventDefault={() => {
+	onsubmit={preventDefault(() => {
 		updateInterfaceHandler();
 		dispatch('save');
-	}}
+	})}
 >
 	<div class="  overflow-y-scroll scrollbar-hidden h-full pr-1.5">
 		<div>
@@ -207,7 +209,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						if (banners.length === 0 || banners.at(-1).content !== '') {
 							banners = [
 								...banners,
@@ -270,7 +272,7 @@
 						<button
 							class="px-2"
 							type="button"
-							on:click={() => {
+							onclick={() => {
 								banners.splice(bannerIdx, 1);
 								banners = banners;
 							}}
@@ -301,7 +303,7 @@
 					<button
 						class="p-1 px-3 text-xs flex rounded transition"
 						type="button"
-						on:click={() => {
+						onclick={() => {
 							if (promptSuggestions.length === 0 || promptSuggestions.at(-1).content !== '') {
 								promptSuggestions = [...promptSuggestions, { content: '', title: ['', ''] }];
 							}
@@ -344,13 +346,13 @@
 									placeholder={$i18n.t('Prompt (e.g. Tell me a fun fact about the Roman Empire)')}
 									rows="3"
 									bind:value={prompt.content}
-								/>
+								></textarea>
 							</div>
 
 							<button
 								class="px-3"
 								type="button"
-								on:click={() => {
+								onclick={() => {
 									promptSuggestions.splice(promptIdx, 1);
 									promptSuggestions = promptSuggestions;
 								}}

@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: `<button>` is invalid inside `<button>` -->
 <script>
 	import { getContext, createEventDispatcher, onMount, onDestroy, tick } from 'svelte';
 

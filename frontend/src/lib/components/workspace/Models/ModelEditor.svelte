@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run, preventDefault } from 'svelte/legacy';
+
 	import { onMount, getContext, tick } from 'svelte';
 	import { models, tools, functions, knowledge as knowledgeCollections, user } from '$lib/stores';
 
@@ -18,42 +20,54 @@
 
 	const i18n = getContext('i18n');
 
-	export let onSubmit: Function;
-	export let onBack: null | Function = null;
 
-	export let model = null;
-	export let edit = false;
 
-	export let preset = true;
+	interface Props {
+		onSubmit: Function;
+		onBack?: null | Function;
+		model?: any;
+		edit?: boolean;
+		preset?: boolean;
+	}
 
-	let loading = false;
+	let {
+		onSubmit,
+		onBack = null,
+		model = $bindable(null),
+		edit = false,
+		preset = true
+	}: Props = $props();
+
+	let loading = $state(false);
 	let success = false;
 
-	let filesInputElement;
-	let inputFiles;
+	let filesInputElement = $state();
+	let inputFiles = $state();
 
-	let showAdvanced = false;
-	let showPreview = false;
+	let showAdvanced = $state(false);
+	let showPreview = $state(false);
 
-	let loaded = false;
+	let loaded = $state(false);
 
 	// ///////////
 	// model
 	// ///////////
 
-	let id = '';
-	let name = '';
+	let id = $state('');
+	let name = $state('');
 
-	$: if (!edit) {
-		if (name) {
-			id = name
-				.replace(/\s+/g, '-')
-				.replace(/[^a-zA-Z0-9-]/g, '')
-				.toLowerCase();
+	run(() => {
+		if (!edit) {
+			if (name) {
+				id = name
+					.replace(/\s+/g, '-')
+					.replace(/[^a-zA-Z0-9-]/g, '')
+					.toLowerCase();
+			}
 		}
-	}
+	});
 
-	let info = {
+	let info = $state({
 		id: '',
 		base_model_id: null,
 		name: '',
@@ -66,21 +80,21 @@
 		params: {
 			system: ''
 		}
-	};
+	});
 
-	let params = {};
-	let capabilities = {
+	let params = $state({});
+	let capabilities = $state({
 		vision: true,
 		usage: undefined,
 		citations: true
-	};
+	});
 
-	let knowledge = [];
-	let toolIds = [];
-	let filterIds = [];
-	let actionIds = [];
+	let knowledge = $state([]);
+	let toolIds = $state([]);
+	let filterIds = $state([]);
+	let actionIds = $state([]);
 
-	let accessControl = {};
+	let accessControl = $state({});
 
 	const addUsage = (base_model_id) => {
 		const baseModel = $models.find((m) => m.id === base_model_id);
@@ -245,7 +259,7 @@
 	{#if onBack}
 		<button
 			class="flex space-x-1"
-			on:click={() => {
+			onclick={() => {
 				onBack();
 			}}
 		>
@@ -274,7 +288,7 @@
 			type="file"
 			hidden
 			accept="image/*"
-			on:change={() => {
+			onchange={() => {
 				let reader = new FileReader();
 				reader.onload = (event) => {
 					let originalImageUrl = `${event.target.result}`;
@@ -338,9 +352,9 @@
 		{#if !edit || (edit && model)}
 			<form
 				class="flex flex-col md:flex-row w-full gap-3 md:gap-6"
-				on:submit|preventDefault={() => {
+				onsubmit={preventDefault(() => {
 					submitHandler();
-				}}
+				})}
 			>
 				<div class="self-center md:self-start flex justify-center my-2 flex-shrink-0">
 					<div class="self-center">
@@ -350,7 +364,7 @@
 								? 'bg-transparent'
 								: 'bg-white'} shadow-xl group relative"
 							type="button"
-							on:click={() => {
+							onclick={() => {
 								filesInputElement.click();
 							}}
 						>
@@ -432,7 +446,7 @@
 									class="text-sm w-full bg-transparent outline-none"
 									placeholder="Select a base model (e.g. llama3, gpt-4o)"
 									bind:value={info.base_model_id}
-									on:change={(e) => {
+									onchange={(e) => {
 										addUsage(e.target.value);
 									}}
 									required
@@ -455,7 +469,7 @@
 							<button
 								class="p-1 text-xs flex rounded transition"
 								type="button"
-								on:click={() => {
+								onclick={() => {
 									if (info.meta.description === null) {
 										info.meta.description = '';
 									} else {
@@ -535,7 +549,7 @@
 								<button
 									class="p-1 px-3 text-xs flex rounded transition"
 									type="button"
-									on:click={() => {
+									onclick={() => {
 										showAdvanced = !showAdvanced;
 									}}
 								>
@@ -573,7 +587,7 @@
 								<button
 									class="p-1 text-xs flex rounded transition"
 									type="button"
-									on:click={() => {
+									onclick={() => {
 										if ((info?.meta?.suggestion_prompts ?? null) === null) {
 											info.meta.suggestion_prompts = [{ content: '' }];
 										} else {
@@ -593,7 +607,7 @@
 								<button
 									class="p-1 px-2 text-xs flex rounded transition"
 									type="button"
-									on:click={() => {
+									onclick={() => {
 										if (
 											info.meta.suggestion_prompts.length === 0 ||
 											info.meta.suggestion_prompts.at(-1).content !== ''
@@ -633,7 +647,7 @@
 											<button
 												class="px-2"
 												type="button"
-												on:click={() => {
+												onclick={() => {
 													info.meta.suggestion_prompts.splice(promptIdx, 1);
 													info.meta.suggestion_prompts = info.meta.suggestion_prompts;
 												}}
@@ -693,7 +707,7 @@
 							<button
 								class="p-1 px-3 text-xs flex rounded transition"
 								type="button"
-								on:click={() => {
+								onclick={() => {
 									showPreview = !showPreview;
 								}}
 							>
@@ -713,7 +727,7 @@
 									value={JSON.stringify(info, null, 2)}
 									disabled
 									readonly
-								/>
+								></textarea>
 							</div>
 						{/if}
 					</div>

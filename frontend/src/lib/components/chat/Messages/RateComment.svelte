@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { toast } from 'svelte-sonner';
 
 	import { createEventDispatcher, onMount, getContext } from 'svelte';
@@ -9,8 +11,12 @@
 
 	const dispatch = createEventDispatcher();
 
-	export let message;
-	export let show = false;
+	interface Props {
+		message: any;
+		show?: boolean;
+	}
+
+	let { message, show = $bindable(false) }: Props = $props();
 
 	let LIKE_REASONS = [
 		'accurate_information',
@@ -32,24 +38,16 @@
 		'other'
 	];
 
-	let tags = [];
+	let tags = $state([]);
 
-	let reasons = [];
-	let selectedReason = null;
-	let comment = '';
+	let reasons = $state([]);
+	let selectedReason = $state(null);
+	let comment = $state('');
 
-	let detailedRating = null;
-	let selectedModel = null;
+	let detailedRating = $state(null);
+	let selectedModel = $state(null);
 
-	$: if (message?.annotation?.rating === 1) {
-		reasons = LIKE_REASONS;
-	} else if (message?.annotation?.rating === -1) {
-		reasons = DISLIKE_REASONS;
-	}
 
-	$: if (message) {
-		init();
-	}
 
 	const init = () => {
 		selectedReason = message?.annotation?.reason ?? '';
@@ -90,6 +88,18 @@
 		toast.success($i18n.t('Thanks for your feedback!'));
 		show = false;
 	};
+	run(() => {
+		if (message?.annotation?.rating === 1) {
+			reasons = LIKE_REASONS;
+		} else if (message?.annotation?.rating === -1) {
+			reasons = DISLIKE_REASONS;
+		}
+	});
+	run(() => {
+		if (message) {
+			init();
+		}
+	});
 </script>
 
 {#if message?.arena}
@@ -110,7 +120,7 @@
 		<!-- <div class=" text-sm">{$i18n.t('Tell us more:')}</div> -->
 
 		<button
-			on:click={() => {
+			onclick={() => {
 				show = false;
 			}}
 		>
@@ -137,7 +147,7 @@
 						rating
 							? 'bg-gray-100 dark:bg-gray-800'
 							: ''} transition rounded-full disabled:cursor-not-allowed disabled:text-gray-500 disabled:bg-white disabled:dark:bg-gray-900"
-						on:click={() => {
+						onclick={() => {
 							detailedRating = rating;
 						}}
 						disabled={message?.annotation?.rating === -1 ? rating > 5 : rating < 6}
@@ -170,7 +180,7 @@
 						reason
 							? 'bg-gray-100 dark:bg-gray-800'
 							: ''} transition rounded-xl"
-						on:click={() => {
+						onclick={() => {
 							selectedReason = reason;
 						}}
 					>
@@ -217,7 +227,7 @@
 			class="w-full text-sm px-1 py-2 bg-transparent outline-none resize-none rounded-xl"
 			placeholder={$i18n.t('Feel free to add specific details')}
 			rows="3"
-		/>
+		></textarea>
 	</div>
 
 	<div class="mt-2 gap-1.5 flex justify-between">
@@ -239,7 +249,7 @@
 
 		<button
 			class="px-3.5 py-1.5 text-sm font-medium bg-black hover:bg-gray-900 text-white dark:bg-white dark:text-black dark:hover:bg-gray-100 transition rounded-full"
-			on:click={() => {
+			onclick={() => {
 				saveHandler();
 			}}
 		>

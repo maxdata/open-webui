@@ -18,15 +18,15 @@
 
 	const i18n = getContext('i18n');
 
-	let loaded = false;
+	let loaded = $state(false);
 
-	let mode = $config?.features.enable_ldap ? 'ldap' : 'signin';
+	let mode = $state($config?.features.enable_ldap ? 'ldap' : 'signin');
 
-	let name = '';
-	let email = '';
-	let password = '';
+	let name = $state('');
+	let email = $state('');
+	let password = $state('');
 
-	let ldapUsername = '';
+	let ldapUsername = $state('');
 
 	const setSessionUser = async (sessionUser) => {
 		if (sessionUser) {
@@ -105,7 +105,7 @@
 		await setSessionUser(sessionUser);
 	};
 
-	let onboarding = false;
+	let onboarding = $state(false);
 
 	onMount(async () => {
 		if ($user !== undefined) {
@@ -175,7 +175,7 @@
 					<div class="  my-auto pb-10 w-full dark:text-gray-100">
 						<form
 							class=" flex flex-col justify-center"
-							on:submit={(e) => {
+							onsubmit={(e) => {
 								e.preventDefault();
 								submitHandler();
 							}}
@@ -292,7 +292,7 @@
 												<button
 													class=" font-medium underline"
 													type="button"
-													on:click={() => {
+													onclick={() => {
 														if (mode === 'signin') {
 															mode = 'signup';
 														} else {
@@ -325,7 +325,7 @@
 								{#if $config?.oauth?.providers?.google}
 									<button
 										class="flex justify-center items-center bg-gray-700/5 hover:bg-gray-700/10 dark:bg-gray-100/5 dark:hover:bg-gray-100/10 dark:text-gray-300 dark:hover:text-white transition w-full rounded-full font-medium text-sm py-2.5"
-										on:click={() => {
+										onclick={() => {
 											window.location.href = `${WEBUI_BASE_URL}/oauth/google/login`;
 										}}
 									>
@@ -350,7 +350,7 @@
 								{#if $config?.oauth?.providers?.microsoft}
 									<button
 										class="flex justify-center items-center bg-gray-700/5 hover:bg-gray-700/10 dark:bg-gray-100/5 dark:hover:bg-gray-100/10 dark:text-gray-300 dark:hover:text-white transition w-full rounded-full font-medium text-sm py-2.5"
-										on:click={() => {
+										onclick={() => {
 											window.location.href = `${WEBUI_BASE_URL}/oauth/microsoft/login`;
 										}}
 									>
@@ -375,7 +375,7 @@
 								{#if $config?.oauth?.providers?.oidc}
 									<button
 										class="flex justify-center items-center bg-gray-700/5 hover:bg-gray-700/10 dark:bg-gray-100/5 dark:hover:bg-gray-100/10 dark:text-gray-300 dark:hover:text-white transition w-full rounded-full font-medium text-sm py-2.5"
-										on:click={() => {
+										onclick={() => {
 											window.location.href = `${WEBUI_BASE_URL}/oauth/oidc/login`;
 										}}
 									>
@@ -409,7 +409,7 @@
 								<button
 									class="flex justify-center items-center text-xs w-full text-center underline"
 									type="button"
-									on:click={() => {
+									onclick={() => {
 										if (mode === 'ldap')
 											mode = ($config?.onboarding ?? false) ? 'signup' : 'signin';
 										else mode = 'ldap';
