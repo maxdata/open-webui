@@ -304,11 +304,7 @@ async def get_embedding_config(user=Depends(get_admin_user)):
         "openai_config": {
             "url": app.state.config.OPENAI_API_BASE_URL,
             "key": app.state.config.OPENAI_API_KEY,
-        },
-        "ollama_config": {
-            "url": app.state.config.OLLAMA_BASE_URL,
-            "key": app.state.config.OLLAMA_API_KEY,
-        },
+        },        
     }
 
 
@@ -354,10 +350,6 @@ async def update_embedding_config(
                 app.state.config.OPENAI_API_BASE_URL = form_data.openai_config.url
                 app.state.config.OPENAI_API_KEY = form_data.openai_config.key
 
-            if form_data.ollama_config is not None:
-                app.state.config.OLLAMA_BASE_URL = form_data.ollama_config.url
-                app.state.config.OLLAMA_API_KEY = form_data.ollama_config.key
-
             app.state.config.RAG_EMBEDDING_BATCH_SIZE = form_data.embedding_batch_size
 
         update_embedding_model(app.state.config.RAG_EMBEDDING_MODEL)
@@ -366,16 +358,8 @@ async def update_embedding_config(
             app.state.config.RAG_EMBEDDING_ENGINE,
             app.state.config.RAG_EMBEDDING_MODEL,
             app.state.sentence_transformer_ef,
-            (
-                app.state.config.OPENAI_API_BASE_URL
-                if app.state.config.RAG_EMBEDDING_ENGINE == "openai"
-                else app.state.config.OLLAMA_BASE_URL
-            ),
-            (
-                app.state.config.OPENAI_API_KEY
-                if app.state.config.RAG_EMBEDDING_ENGINE == "openai"
-                else app.state.config.OLLAMA_API_KEY
-            ),
+            app.state.config.OPENAI_API_BASE_URL,
+            app.state.config.OPENAI_API_KEY,                
             app.state.config.RAG_EMBEDDING_BATCH_SIZE,
         )
 
@@ -387,11 +371,7 @@ async def update_embedding_config(
             "openai_config": {
                 "url": app.state.config.OPENAI_API_BASE_URL,
                 "key": app.state.config.OPENAI_API_KEY,
-            },
-            "ollama_config": {
-                "url": app.state.config.OLLAMA_BASE_URL,
-                "key": app.state.config.OLLAMA_API_KEY,
-            },
+            },            
         }
     except Exception as e:
         log.exception(f"Problem updating embedding model: {e}")
@@ -811,16 +791,8 @@ def save_docs_to_vector_db(
             app.state.config.RAG_EMBEDDING_ENGINE,
             app.state.config.RAG_EMBEDDING_MODEL,
             app.state.sentence_transformer_ef,
-            (
-                app.state.config.OPENAI_API_BASE_URL
-                if app.state.config.RAG_EMBEDDING_ENGINE == "openai"
-                else app.state.config.OLLAMA_BASE_URL
-            ),
-            (
-                app.state.config.OPENAI_API_KEY
-                if app.state.config.RAG_EMBEDDING_ENGINE == "openai"
-                else app.state.config.OLLAMA_API_KEY
-            ),
+            app.state.config.OPENAI_API_BASE_URL,
+            app.state.config.OPENAI_API_KEY,                
             app.state.config.RAG_EMBEDDING_BATCH_SIZE,
         )
 

@@ -105,8 +105,7 @@ from open_webui.env import (
 )
 from open_webui.utils.misc import (
     add_or_update_system_message,
-    get_last_user_message,
-    prepend_to_first_user_message_content,
+    get_last_user_message
 )
 from open_webui.utils.oauth import oauth_manager
 from open_webui.utils.security_headers import SecurityHeadersMiddleware
@@ -167,8 +166,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    docs_url="/docs" if ENV == "dev" else None,
-    openapi_url="/openapi.json" if ENV == "dev" else None,
+    docs_url="/docs",
+    openapi_url="/openapi.json",
     redoc_url=None,
     lifespan=lifespan,
 )

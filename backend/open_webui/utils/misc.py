@@ -61,22 +61,6 @@ def remove_system_message(messages: list[dict]) -> list[dict]:
 def pop_system_message(messages: list[dict]) -> tuple[Optional[dict], list[dict]]:
     return get_system_message(messages), remove_system_message(messages)
 
-
-def prepend_to_first_user_message_content(
-    content: str, messages: list[dict]
-) -> list[dict]:
-    for message in messages:
-        if message["role"] == "user":
-            if isinstance(message["content"], list):
-                for item in message["content"]:
-                    if item["type"] == "text":
-                        item["text"] = f"{content}\n{item['text']}"
-            else:
-                message["content"] = f"{content}\n{message['content']}"
-            break
-    return messages
-
-
 def add_or_update_system_message(content: str, messages: list[dict]):
     """
     Adds a new system message at the beginning of the messages list

@@ -257,25 +257,12 @@ async def get_all_models_responses() -> list:
     if not app.state.config.ENABLE_OPENAI_API:
         return []
 
-    # Check if API KEYS length is same than API URLS length
-    num_urls = len(app.state.config.OPENAI_API_BASE_URLS)
-    num_keys = len(app.state.config.OPENAI_API_KEYS)
-
-    if num_keys != num_urls:
-        # if there are more keys than urls, remove the extra keys
-        if num_keys > num_urls:
-            new_keys = app.state.config.OPENAI_API_KEYS[:num_urls]
-            app.state.config.OPENAI_API_KEYS = new_keys
-        # if there are more urls than keys, add empty keys
-        else:
-            app.state.config.OPENAI_API_KEYS += [""] * (num_urls - num_keys)
-
     tasks = []
     for idx, url in enumerate(app.state.config.OPENAI_API_BASE_URLS):
-        if url not in app.state.config.OPENAI_API_CONFIGS:
+        if url not in app.state.config.OPENAI_API_CONFIGS:            
             tasks.append(
                 aiohttp_get(f"{url}/models", app.state.config.OPENAI_API_KEYS[idx])
-            )
+        )
         else:
             api_config = app.state.config.OPENAI_API_CONFIGS.get(url, {})
 
@@ -332,19 +319,21 @@ async def get_all_models_responses() -> list:
 async def get_all_models() -> dict[str, list]:
     log.info("get_all_models()")
 
-    if not app.state.config.ENABLE_OPENAI_API:
-        return {"data": []}
-
-    responses = await get_all_models_responses()
-
-    def extract_data(response):
-        if response and "data" in response:
-            return response["data"]
-        if isinstance(response, list):
-            return response
-        return None
-
-    models = {"data": merge_models_lists(map(extract_data, responses))}
+    models = {"data": [
+        {
+                "id": "gpt-4o",
+                "name": "gpt-4o",
+                "owned_by": "openai",
+                "openai": {
+                    "id": "gpt-4o",
+                    "api_version": "2024-09-01-preview",
+                    "deployment_name": "gpt-4o",
+                    "model_name": "gpt-4o",
+                },
+                "urlIdx": 0,
+            }
+        ]
+    }
     log.debug(f"models: {models}")
 
     return models
