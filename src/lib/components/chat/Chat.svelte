@@ -46,11 +46,9 @@
 		splitStream
 	} from '$lib/utils';
 
-	import { generateChatCompletion } from '$lib/apis/ollama';
 	import {
 		addTagById,
 		createNewChat,
-		deleteTagById,
 		deleteTagsById,
 		getAllTags,
 		getChatById,

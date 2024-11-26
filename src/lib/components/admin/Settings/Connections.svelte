@@ -4,7 +4,6 @@
 
 	const dispatch = createEventDispatcher();
 
-	import { getOllamaConfig, updateOllamaConfig } from '$lib/apis/ollama';
 	import { getOpenAIConfig, updateOpenAIConfig, getOpenAIModels } from '$lib/apis/openai';
 	import { getModels as _getModels } from '$lib/apis';
 
@@ -17,8 +16,7 @@
 
 	import OpenAIConnection from './Connections/OpenAIConnection.svelte';
 	import AddConnectionModal from './Connections/AddConnectionModal.svelte';
-	import OllamaConnection from './Connections/OllamaConnection.svelte';
-
+	
 	const i18n = getContext('i18n');
 
 	const getModels = async () => {
