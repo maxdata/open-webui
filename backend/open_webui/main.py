@@ -727,10 +727,7 @@ class ChatCompletionMiddleware(BaseHTTPMiddleware):
 
         content_type = response.headers["Content-Type"]
         is_openai = "text/event-stream" in content_type
-        is_ollama = "application/x-ndjson" in content_type
-        if not is_openai and not is_ollama:
-            return response
-
+        
         def wrap_item(item):
             return f"data: {item}\n\n" if is_openai else f"{item}\n"
 

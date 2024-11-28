@@ -1,6 +1,4 @@
-<script lang="ts">
-	import { v4 as uuidv4 } from 'uuid';
-
+<script lang="ts">	
 	import { toast } from 'svelte-sonner';
 	import { models } from '$lib/stores';
 	import { getContext, onMount, tick } from 'svelte';
