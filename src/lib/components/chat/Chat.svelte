@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot subscribe to stores that are not declared at the top level of the component -->
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
 	import { toast } from 'svelte-sonner';
@@ -41,16 +42,13 @@
 		convertMessagesToHistory,
 		copyToClipboard,
 		getMessageContentParts,
-		extractSentencesForAudio,
 		promptTemplate,
 		splitStream
 	} from '$lib/utils';
 
-	import { generateChatCompletion } from '$lib/apis/ollama';
 	import {
 		addTagById,
 		createNewChat,
-		deleteTagById,
 		deleteTagsById,
 		getAllTags,
 		getChatById,

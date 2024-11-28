@@ -1,4 +1,5 @@
 <!-- @migration-task Error while migrating Svelte code: Event attribute must be a JavaScript expression, not a string -->
+<!-- @migration-task Error while migrating Svelte code: Event attribute must be a JavaScript expression, not a string -->
 <script lang="ts">
 	import DOMPurify from 'dompurify';
 	import { createEventDispatcher, onMount, getContext } from 'svelte';

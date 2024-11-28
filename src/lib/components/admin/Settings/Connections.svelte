@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: Cannot reassign or bind to each block argument in runes mode. Use the array and index variables instead (e.g. `array[i] = value` instead of `entry = value`) -->
 <script lang="ts">
 	import { preventDefault } from 'svelte/legacy';
 
