@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
+	import { readable } from 'svelte/store';
 	import Modal from '../common/Modal.svelte';
 
-	const i18n = getContext('i18n');
+	const i18nContext = getContext('i18n');
+	const i18n = readable(i18nContext, (set) => {
+		const unsubscribe = i18nContext.subscribe(set);
+		return unsubscribe;
+	});
 
-	interface Props {
-		show?: boolean;
-	}
-
-	let { show = $bindable(false) }: Props = $props();
+	export let show = false;
 </script>
 
 <Modal bind:show>
@@ -17,7 +18,8 @@
 			<div class=" text-lg font-medium self-center">{$i18n.t('Keyboard shortcuts')}</div>
 			<button
 				class="self-center"
-				onclick={() => {
+				aria-label="Close shortcuts modal"
+				on:click={() => {
 					show = false;
 				}}
 			>

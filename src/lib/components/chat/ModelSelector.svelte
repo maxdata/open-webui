@@ -1,46 +1,41 @@
-<!-- @migration-task Error while migrating Svelte code: Cannot reassign or bind to each block argument in runes mode. Use the array and index variables instead (e.g. `array[i] = value` instead of `entry = value`) -->
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { models, showSettings, settings, user, mobile, config } from '$lib/stores';
 	import { onMount, tick, getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import Selector from './ModelSelector/Selector.svelte';
 	import Tooltip from '../common/Tooltip.svelte';
 
-	import { setDefaultModels } from '$lib/apis/configs';
 	import { updateUserSettings } from '$lib/apis/users';
 
-	const i18n = getContext('i18n');
-
-
-	interface Props {
-		selectedModels?: any;
-		disabled?: boolean;
-		showSetDefault?: boolean;
+	// Define the type for i18n if not already defined
+	interface I18n {
+		t: (key: string) => string;
 	}
 
-	let { selectedModels = $bindable(['']), disabled = false, showSetDefault = true }: Props = $props();
+	const i18n: I18n = getContext('i18n');
+
+	export let selectedModels = [''];
+	export let disabled = false;
+
+	export let showSetDefault = true;
 
 	const saveDefaultModel = async () => {
 		const hasEmptyModel = selectedModels.filter((it) => it === '');
 		if (hasEmptyModel.length) {
-			toast.error($i18n.t('Choose a model before saving...'));
+			toast.error(i18n.t('Choose a model before saving...'));
 			return;
 		}
 		settings.set({ ...$settings, models: selectedModels });
 		await updateUserSettings(localStorage.token, { ui: $settings });
 
-		toast.success($i18n.t('Default model updated'));
+		toast.success(i18n.t('Default model updated'));
 	};
 
-	run(() => {
-		if (selectedModels.length > 0 && $models.length > 0) {
-			selectedModels = selectedModels.map((model) =>
-				$models.map((m) => m.id).includes(model) ? model : ''
-			);
-		}
-	});
+	$: if (selectedModels.length > 0 && $models.length > 0) {
+		selectedModels = selectedModels.map((model) =>
+			$models.map((m) => m.id).includes(model) ? model : ''
+		);
+	}
 </script>
 
 <div class="flex flex-col w-full items-start">
@@ -50,16 +45,16 @@
 				<div class="mr-1 max-w-full">
 					<Selector
 						id={`${selectedModelIdx}`}
-						placeholder={$i18n.t('Select a model')}
+						placeholder={i18n.t('Select a model')}
 						items={$models.map((model) => ({
 							value: model.id,
 							label: model.name,
 							model: model
 						}))}
-						showTemporaryChatControl={$user.role === 'user'
-							? ($user?.permissions?.chat?.temporary ?? true)
+						showTemporaryChatControl={$user && $user.role === 'user' && $user.permissions
+							? ($user.permissions.chat?.temporary ?? true)
 							: true}
-						bind:value={selectedModels[selectedModelIdx]}
+						bind:value={selectedModel}
 					/>
 				</div>
 			</div>
@@ -68,11 +63,11 @@
 				<div
 					class="  self-center mx-1 disabled:text-gray-600 disabled:hover:text-gray-600 -translate-y-[0.5px]"
 				>
-					<Tooltip content={$i18n.t('Add Model')}>
+					<Tooltip content={i18n.t('Add Model')}>
 						<button
 							class=" "
 							{disabled}
-							onclick={() => {
+							on:click={() => {
 								selectedModels = [...selectedModels, ''];
 							}}
 							aria-label="Add Model"
@@ -94,10 +89,10 @@
 				<div
 					class="  self-center mx-1 disabled:text-gray-600 disabled:hover:text-gray-600 -translate-y-[0.5px]"
 				>
-					<Tooltip content={$i18n.t('Remove Model')}>
+					<Tooltip content={i18n.t('Remove Model')}>
 						<button
 							{disabled}
-							onclick={() => {
+							on:click={() => {
 								selectedModels.splice(selectedModelIdx, 1);
 								selectedModels = selectedModels;
 							}}
@@ -123,6 +118,6 @@
 
 {#if showSetDefault}
 	<div class=" absolute text-left mt-[1px] ml-1 text-[0.7rem] text-gray-500 font-primary">
-		<button onclick={saveDefaultModel}> {$i18n.t('Set as default')}</button>
+		<button on:click={saveDefaultModel}> {i18n.t('Set as default')}</button>
 	</div>
 {/if}

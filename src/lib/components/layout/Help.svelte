@@ -17,6 +17,7 @@
 		onclick={() => {
 			showShortcuts = !showShortcuts;
 		}}
+		aria-label="Toggle shortcuts"
 	></button>
 
 	<HelpMenu
