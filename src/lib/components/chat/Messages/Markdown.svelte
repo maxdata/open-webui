@@ -1,4 +1,6 @@
-<script>
+<script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { marked } from 'marked';
 	import { replaceTokens, processResponseContent } from '$lib/utils';
 	import { user } from '$lib/stores';
@@ -11,15 +13,26 @@
 
 	const dispatch = createEventDispatcher();
 
-	export let id;
-	export let content;
-	export let model = null;
-	export let save = false;
 
-	export let sourceIds = [];
-	export let onSourceClick = () => {};
+	interface Props {
+		id: any;
+		content: any;
+		model?: any;
+		save?: boolean;
+		sourceIds?: any;
+		onSourceClick?: any;
+	}
 
-	let tokens = [];
+	let {
+		id,
+		content,
+		model = null,
+		save = false,
+		sourceIds = [],
+		onSourceClick = () => {}
+	}: Props = $props();
+
+	let tokens = $state([]);
 
 	const options = {
 		throwOnError: false
@@ -28,13 +41,15 @@
 	marked.use(markedKatexExtension(options));
 	marked.use(markedExtension(options));
 
-	$: (async () => {
-		if (content) {
-			tokens = marked.lexer(
-				replaceTokens(processResponseContent(content), sourceIds, model?.name, $user?.name)
-			);
-		}
-	})();
+	run(() => {
+		(async () => {
+			if (content) {
+				tokens = marked.lexer(
+					replaceTokens(processResponseContent(content), sourceIds, model?.name, $user?.name)
+				);
+			}
+		})();
+	});
 </script>
 
 {#key id}

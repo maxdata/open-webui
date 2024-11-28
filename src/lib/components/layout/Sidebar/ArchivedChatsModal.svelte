@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import fileSaver from 'file-saver';
 	const { saveAs } = fileSaver;
 	import { toast } from 'svelte-sonner';
@@ -19,12 +21,16 @@
 	import UnarchiveAllConfirmDialog from '$lib/components/common/ConfirmDialog.svelte';
 	const i18n = getContext('i18n');
 
-	export let show = false;
+	interface Props {
+		show?: boolean;
+	}
 
-	let chats = [];
+	let { show = $bindable(false) }: Props = $props();
 
-	let searchValue = '';
-	let showUnarchiveAllConfirmDialog = false;
+	let chats = $state([]);
+
+	let searchValue = $state('');
+	let showUnarchiveAllConfirmDialog = $state(false);
 
 	const unarchiveChatHandler = async (chatId) => {
 		const res = await archiveChatById(localStorage.token, chatId).catch((error) => {
@@ -58,11 +64,13 @@
 		chats = await getArchivedChatList(localStorage.token);
 	};
 
-	$: if (show) {
-		(async () => {
-			chats = await getArchivedChatList(localStorage.token);
-		})();
-	}
+	run(() => {
+		if (show) {
+			(async () => {
+				chats = await getArchivedChatList(localStorage.token);
+			})();
+		}
+	});
 </script>
 
 <UnarchiveAllConfirmDialog
@@ -80,7 +88,7 @@
 			<div class=" text-lg font-medium self-center">{$i18n.t('Archived Chats')}</div>
 			<button
 				class="self-center"
-				on:click={() => {
+				onclick={() => {
 					show = false;
 				}}
 			>
@@ -138,7 +146,7 @@
 											<th scope="col" class="px-3 py-2 hidden md:flex">
 												{$i18n.t('Created At')}
 											</th>
-											<th scope="col" class="px-3 py-2 text-right" />
+											<th scope="col" class="px-3 py-2 text-right"></th>
 										</tr>
 									</thead>
 									<tbody>
@@ -168,7 +176,7 @@
 														<Tooltip content={$i18n.t('Unarchive Chat')}>
 															<button
 																class="self-center w-fit text-sm px-2 py-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl"
-																on:click={async () => {
+																onclick={async () => {
 																	unarchiveChatHandler(chat.id);
 																}}
 															>
@@ -192,7 +200,7 @@
 														<Tooltip content={$i18n.t('Delete Chat')}>
 															<button
 																class="self-center w-fit text-sm px-2 py-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl"
-																on:click={async () => {
+																onclick={async () => {
 																	deleteChatHandler(chat.id);
 																}}
 															>
@@ -224,7 +232,7 @@
 						<div class="flex flex-wrap text-sm font-medium gap-1.5 mt-2 m-1 justify-end w-full">
 							<button
 								class=" px-3.5 py-1.5 font-medium hover:bg-black/5 dark:hover:bg-white/5 outline outline-1 outline-gray-300 dark:outline-gray-800 rounded-3xl"
-								on:click={() => {
+								onclick={() => {
 									showUnarchiveAllConfirmDialog = true;
 								}}
 							>
@@ -233,7 +241,7 @@
 
 							<button
 								class="px-3.5 py-1.5 font-medium hover:bg-black/5 dark:hover:bg-white/5 outline outline-1 outline-gray-300 dark:outline-gray-800 rounded-3xl"
-								on:click={() => {
+								onclick={() => {
 									exportChatsHandler();
 								}}
 							>

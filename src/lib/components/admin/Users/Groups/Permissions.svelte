@@ -5,7 +5,7 @@
 	import Switch from '$lib/components/common/Switch.svelte';
 	import Tooltip from '$lib/components/common/Tooltip.svelte';
 
-	export let permissions = {
+	let { permissions = $bindable({
 		workspace: {
 			models: false,
 			knowledge: false,
@@ -18,7 +18,7 @@
 			temporary: true,
 			file_upload: true
 		}
-	};
+	}) } = $props();
 </script>
 
 <div>

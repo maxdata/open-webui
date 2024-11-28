@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { onMount, getContext, createEventDispatcher } from 'svelte';
 	const i18n = getContext('i18n');
 	const dispatch = createEventDispatcher();
@@ -11,23 +13,20 @@
 	import SvgPanZoom from '../common/SVGPanZoom.svelte';
 	import ArrowLeft from '../icons/ArrowLeft.svelte';
 
-	export let overlay = false;
-	export let history;
-	let messages = [];
-
-	let contents: Array<{ type: string; content: string }> = [];
-	let selectedContentIdx = 0;
-
-	let copied = false;
-	let iframeElement: HTMLIFrameElement;
-
-	$: if (history) {
-		messages = createMessagesList(history, history.currentId);
-		getContents();
-	} else {
-		messages = [];
-		getContents();
+	interface Props {
+		overlay?: boolean;
+		history: any;
 	}
+
+	let { overlay = false, history }: Props = $props();
+	let messages = $state([]);
+
+	let contents: Array<{ type: string; content: string }> = $state([]);
+	let selectedContentIdx = $state(0);
+
+	let copied = $state(false);
+	let iframeElement: HTMLIFrameElement = $state();
+
 
 	const getContents = () => {
 		contents = [];
@@ -180,6 +179,15 @@
 	};
 
 	onMount(() => {});
+	run(() => {
+		if (history) {
+			messages = createMessagesList(history, history.currentId);
+			getContents();
+		} else {
+			messages = [];
+			getContents();
+		}
+	});
 </script>
 
 <div class=" w-full h-full relative flex flex-col bg-gray-50 dark:bg-gray-850">
@@ -191,7 +199,7 @@
 		<div class="absolute pointer-events-none z-50 w-full flex items-center justify-start p-4">
 			<button
 				class="self-center pointer-events-auto p-1 rounded-full bg-white dark:bg-gray-850"
-				on:click={() => {
+				onclick={() => {
 					showArtifacts.set(false);
 				}}
 			>
@@ -202,7 +210,7 @@
 		<div class=" absolute pointer-events-none z-50 w-full flex items-center justify-end p-4">
 			<button
 				class="self-center pointer-events-auto p-1 rounded-full bg-white dark:bg-gray-850"
-				on:click={() => {
+				onclick={() => {
 					dispatch('close');
 					showControls.set(false);
 					showArtifacts.set(false);
@@ -223,7 +231,7 @@
 								srcdoc={contents[selectedContentIdx].content}
 								class="w-full border-0 h-full rounded-none"
 								sandbox="allow-scripts allow-forms allow-same-origin"
-								on:load={iframeLoadHandler}
+								onload={iframeLoadHandler}
 							></iframe>
 						{:else if contents[selectedContentIdx].type === 'svg'}
 							<SvgPanZoom
@@ -247,7 +255,7 @@
 				<div class="flex items-center gap-0.5 self-center min-w-fit" dir="ltr">
 					<button
 						class="self-center p-1 hover:bg-black/5 dark:hover:bg-white/5 dark:hover:text-white hover:text-black rounded-md transition disabled:cursor-not-allowed"
-						on:click={() => navigateContent('prev')}
+						onclick={() => navigateContent('prev')}
 						disabled={contents.length <= 1}
 					>
 						<svg
@@ -275,7 +283,7 @@
 
 					<button
 						class="self-center p-1 hover:bg-black/5 dark:hover:bg-white/5 dark:hover:text-white hover:text-black rounded-md transition disabled:cursor-not-allowed"
-						on:click={() => navigateContent('next')}
+						onclick={() => navigateContent('next')}
 						disabled={contents.length <= 1}
 					>
 						<svg
@@ -295,7 +303,7 @@
 			<div class="flex items-center gap-1">
 				<button
 					class="copy-code-button bg-none border-none text-xs bg-gray-50 hover:bg-gray-100 dark:bg-gray-850 dark:hover:bg-gray-800 transition rounded-md px-1.5 py-0.5"
-					on:click={() => {
+					onclick={() => {
 						copyToClipboard(contents[selectedContentIdx].content);
 						copied = true;
 
@@ -309,7 +317,7 @@
 					<Tooltip content={$i18n.t('Open in full screen')}>
 						<button
 							class=" bg-none border-none text-xs bg-gray-50 hover:bg-gray-100 dark:bg-gray-850 dark:hover:bg-gray-800 transition rounded-md p-0.5"
-							on:click={showFullScreen}
+							onclick={showFullScreen}
 						>
 							<ArrowsPointingOut className="size-3.5" />
 						</button>

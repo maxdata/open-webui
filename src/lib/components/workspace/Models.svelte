@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { marked } from 'marked';
 
 	import { toast } from 'svelte-sonner';
@@ -34,26 +36,21 @@
 	import Spinner from '../common/Spinner.svelte';
 	import { capitalizeFirstLetter } from '$lib/utils';
 
-	let shiftKey = false;
+	let shiftKey = $state(false);
 
-	let importFiles;
-	let modelsImportInputElement: HTMLInputElement;
-	let loaded = false;
+	let importFiles = $state();
+	let modelsImportInputElement: HTMLInputElement = $state();
+	let loaded = $state(false);
 
-	let models = [];
+	let models = $state([]);
 
-	let filteredModels = [];
-	let selectedModel = null;
+	let filteredModels = $state([]);
+	let selectedModel = $state(null);
 
-	let showModelDeleteConfirm = false;
+	let showModelDeleteConfirm = $state(false);
 
-	$: if (models) {
-		filteredModels = models.filter(
-			(m) => searchValue === '' || m.name.toLowerCase().includes(searchValue.toLowerCase())
-		);
-	}
 
-	let searchValue = '';
+	let searchValue = $state('');
 
 	const deleteModelHandler = async (model) => {
 		const res = await deleteModelById(localStorage.token, model.id).catch((e) => {
@@ -180,6 +177,13 @@
 			window.removeEventListener('blur', onBlur);
 		};
 	});
+	run(() => {
+		if (models) {
+			filteredModels = models.filter(
+				(m) => searchValue === '' || m.name.toLowerCase().includes(searchValue.toLowerCase())
+			);
+		}
+	});
 </script>
 
 <svelte:head>
@@ -200,7 +204,7 @@
 		<div class="flex justify-between items-center">
 			<div class="flex items-center md:self-center text-xl font-medium px-0.5">
 				{$i18n.t('Models')}
-				<div class="flex self-center w-[1px] h-6 mx-2.5 bg-gray-50 dark:bg-gray-850" />
+				<div class="flex self-center w-[1px] h-6 mx-2.5 bg-gray-50 dark:bg-gray-850"></div>
 				<span class="text-lg font-medium text-gray-500 dark:text-gray-300"
 					>{filteredModels.length}</span
 				>
@@ -300,7 +304,7 @@
 								<button
 									class="self-center w-fit text-sm px-2 py-2 dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-xl"
 									type="button"
-									on:click={() => {
+									onclick={() => {
 										deleteModelHandler(model);
 									}}
 								>
@@ -388,7 +392,7 @@
 					type="file"
 					accept=".json"
 					hidden
-					on:change={() => {
+					onchange={() => {
 						console.log(importFiles);
 
 						let reader = new FileReader();
@@ -422,7 +426,7 @@
 
 				<button
 					class="flex text-xs items-center space-x-1 px-3 py-1.5 rounded-xl bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-200 transition"
-					on:click={() => {
+					onclick={() => {
 						modelsImportInputElement.click();
 					}}
 				>
@@ -446,7 +450,7 @@
 
 				<button
 					class="flex text-xs items-center space-x-1 px-3 py-1.5 rounded-xl bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-200 transition"
-					on:click={async () => {
+					onclick={async () => {
 						downloadModels($_models);
 					}}
 				>

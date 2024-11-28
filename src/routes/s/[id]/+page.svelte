@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { tick, getContext } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
@@ -16,38 +18,27 @@
 
 	const i18n = getContext('i18n');
 
-	let loaded = false;
+	let loaded = $state(false);
 
-	let autoScroll = true;
+	let autoScroll = $state(true);
 	let processing = '';
 	
 	// let chatId = $page.params.id;
-	let selectedModels = [''];
+	let selectedModels = $state(['']);
 
-	let chat = null;
-	let user = null;
+	let chat = $state(null);
+	let user = $state(null);
 
-	let title = '';
+	let title = $state('');
 	let files = [];
 
-	let messages = [];
-	let history = {
+	let messages = $state([]);
+	let history = $state({
 		messages: {},
 		currentId: null
-	};
+	});
 
-	$: messages = createMessagesList(history, history.currentId);
 
-	$: if ($page.params.id) {
-		(async () => {
-			if (await loadSharedChat()) {
-				await tick();
-				loaded = true;
-			} else {
-				await goto('/');
-			}
-		})();
-	}
 
 	//////////////////////////
 	// Web functions
@@ -96,6 +87,21 @@
 			}
 		}
 	};
+	run(() => {
+		messages = createMessagesList(history, history.currentId);
+	});
+	run(() => {
+		if ($page.params.id) {
+			(async () => {
+				if (await loadSharedChat()) {
+					await tick();
+					loaded = true;
+				} else {
+					await goto('/');
+				}
+			})();
+		}
+	});
 </script>
 
 <svelte:head>

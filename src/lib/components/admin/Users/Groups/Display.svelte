@@ -4,8 +4,12 @@
 
 	const i18n = getContext('i18n');
 
-	export let name = '';
-	export let description = '';
+	interface Props {
+		name?: string;
+		description?: string;
+	}
+
+	let { name = $bindable(''), description = $bindable('') }: Props = $props();
 </script>
 
 <div class="flex gap-2">

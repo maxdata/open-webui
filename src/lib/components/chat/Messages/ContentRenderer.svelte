@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { onDestroy, onMount, tick, getContext, createEventDispatcher } from 'svelte';
 	const i18n = getContext('i18n');
 	const dispatch = createEventDispatcher();
@@ -9,21 +9,33 @@
 	import ChatBubble from '$lib/components/icons/ChatBubble.svelte';
 	import { stringify } from 'postcss';
 
-	export let id;
-	export let content;
-	export let model = null;
-	export let sources = null;
 
-	export let save = false;
-	export let floatingButtons = true;
-	export let onSourceClick = () => {};
+	interface Props {
+		id: any;
+		content: any;
+		model?: any;
+		sources?: any;
+		save?: boolean;
+		floatingButtons?: boolean;
+		onSourceClick?: any;
+	}
 
-	let contentContainerElement;
-	let buttonsContainerElement;
+	let {
+		id,
+		content,
+		model = null,
+		sources = null,
+		save = false,
+		floatingButtons = true,
+		onSourceClick = () => {}
+	}: Props = $props();
 
-	let selectedText = '';
-	let floatingInput = false;
-	let floatingInputValue = '';
+	let contentContainerElement = $state();
+	let buttonsContainerElement = $state();
+
+	let selectedText = $state('');
+	let floatingInput = $state(false);
+	let floatingInputValue = $state('');
 
 	const updateButtonPosition = (event) => {
 		if (
@@ -188,7 +200,7 @@
 			>
 				<button
 					class="px-1 hover:bg-gray-50 dark:hover:bg-gray-800 rounded flex items-center gap-1 min-w-fit"
-					on:click={() => {
+					onclick={() => {
 						selectedText = window.getSelection().toString();
 						floatingInput = true;
 					}}
@@ -199,7 +211,7 @@
 				</button>
 				<button
 					class="px-1 hover:bg-gray-50 dark:hover:bg-gray-800 rounded flex items-center gap-1 min-w-fit"
-					on:click={() => {
+					onclick={() => {
 						const selection = window.getSelection();
 						dispatch('select', {
 							type: 'explain',
@@ -225,7 +237,7 @@
 					class="ml-5 bg-transparent outline-none w-full flex-1 text-sm"
 					placeholder={$i18n.t('Ask a question')}
 					bind:value={floatingInputValue}
-					on:keydown={(e) => {
+					onkeydown={(e) => {
 						if (e.key === 'Enter') {
 							selectAskHandler();
 						}
@@ -237,7 +249,7 @@
 						class="{floatingInputValue !== ''
 							? 'bg-black text-white hover:bg-gray-900 dark:bg-white dark:text-black dark:hover:bg-gray-100 '
 							: 'text-white bg-gray-200 dark:text-gray-900 dark:bg-gray-700 disabled'} transition rounded-full p-1.5 m-0.5 self-center"
-						on:click={() => {
+						onclick={() => {
 							selectAskHandler();
 						}}
 					>

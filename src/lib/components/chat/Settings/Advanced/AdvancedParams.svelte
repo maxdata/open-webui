@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import Switch from '$lib/components/common/Switch.svelte';
 	import Tooltip from '$lib/components/common/Tooltip.svelte';
 	import { getContext, createEventDispatcher } from 'svelte';
@@ -7,9 +9,13 @@
 
 	const i18n = getContext('i18n');
 
-	export let admin = false;
 
-	export let params = {
+	interface Props {
+		admin?: boolean;
+		params?: any;
+	}
+
+	let { admin = false, params = $bindable({
 		// Advanced
 		stream_response: null, // Set stream responses for this model individually
 		seed: null,
@@ -33,14 +39,16 @@
 		num_thread: null,
 		num_gpu: null,
 		template: null
-	};
+	}) }: Props = $props();
 
 	let customFieldName = '';
 	let customFieldValue = '';
 
-	$: if (params) {
-		dispatch('change', params);
-	}
+	run(() => {
+		if (params) {
+			dispatch('change', params);
+		}
+	});
 </script>
 
 <div class=" space-y-1 text-xs pb-safe-bottom">
@@ -58,7 +66,7 @@
 				</div>
 				<button
 					class="p-1 px-3 text-xs flex rounded transition"
-					on:click={() => {
+					onclick={() => {
 						params.stream_response =
 							(params?.stream_response ?? null) === null
 								? true
@@ -96,7 +104,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.seed = (params?.seed ?? null) === null ? 0 : null;
 					}}
 				>
@@ -141,7 +149,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.stop = (params?.stop ?? null) === null ? '' : null;
 					}}
 				>
@@ -184,7 +192,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.temperature = (params?.temperature ?? null) === null ? 0.8 : null;
 					}}
 				>
@@ -239,7 +247,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.mirostat = (params?.mirostat ?? null) === null ? 0 : null;
 					}}
 				>
@@ -294,7 +302,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.mirostat_eta = (params?.mirostat_eta ?? null) === null ? 0.1 : null;
 					}}
 				>
@@ -350,7 +358,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.mirostat_tau = (params?.mirostat_tau ?? null) === null ? 5.0 : null;
 					}}
 				>
@@ -405,7 +413,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.top_k = (params?.top_k ?? null) === null ? 40 : null;
 					}}
 				>
@@ -461,7 +469,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.top_p = (params?.top_p ?? null) === null ? 0.9 : null;
 					}}
 				>
@@ -516,7 +524,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.min_p = (params?.min_p ?? null) === null ? 0.0 : null;
 					}}
 				>
@@ -572,7 +580,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.frequency_penalty = (params?.frequency_penalty ?? null) === null ? 1.1 : null;
 					}}
 				>
@@ -628,7 +636,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.repeat_last_n = (params?.repeat_last_n ?? null) === null ? 64 : null;
 					}}
 				>
@@ -684,7 +692,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.tfs_z = (params?.tfs_z ?? null) === null ? 1 : null;
 					}}
 				>
@@ -740,7 +748,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.num_ctx = (params?.num_ctx ?? null) === null ? 2048 : null;
 					}}
 				>
@@ -795,7 +803,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.num_batch = (params?.num_batch ?? null) === null ? 512 : null;
 					}}
 				>
@@ -850,7 +858,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.num_keep = (params?.num_keep ?? null) === null ? 24 : null;
 					}}
 				>
@@ -905,7 +913,7 @@
 				<button
 					class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						params.max_tokens = (params?.max_tokens ?? null) === null ? 128 : null;
 					}}
 				>
@@ -960,7 +968,7 @@
 					<button
 						class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 						type="button"
-						on:click={() => {
+						onclick={() => {
 							params.use_mmap = (params?.use_mmap ?? null) === null ? true : null;
 						}}
 					>
@@ -1001,7 +1009,7 @@
 					<button
 						class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 						type="button"
-						on:click={() => {
+						onclick={() => {
 							params.use_mlock = (params?.use_mlock ?? null) === null ? true : null;
 						}}
 					>
@@ -1043,7 +1051,7 @@
 					<button
 						class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 						type="button"
-						on:click={() => {
+						onclick={() => {
 							params.num_thread = (params?.num_thread ?? null) === null ? 2 : null;
 						}}
 					>
@@ -1099,7 +1107,7 @@
 					<button
 						class="p-1 px-3 text-xs flex rounded transition flex-shrink-0 outline-none"
 						type="button"
-						on:click={() => {
+						onclick={() => {
 							params.num_gpu = (params?.num_gpu ?? null) === null ? 0 : null;
 						}}
 					>

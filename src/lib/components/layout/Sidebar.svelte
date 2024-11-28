@@ -52,20 +52,20 @@
 
 	const BREAKPOINT = 768;
 
-	let navElement;
-	let search = '';
+	let navElement = $state();
+	let search = $state('');
 
-	let shiftKey = false;
+	let shiftKey = $state(false);
 
-	let selectedChatId = null;
-	let showDropdown = false;
-	let showPinnedChat = true;
+	let selectedChatId = $state(null);
+	let showDropdown = $state(false);
+	let showPinnedChat = $state(true);
 
 	// Pagination variables
-	let chatListLoading = false;
-	let allChatsLoaded = false;
+	let chatListLoading = $state(false);
+	let allChatsLoaded = $state(false);
 
-	let folders = {};
+	let folders = $state({});
 
 	const initFolders = async () => {
 		const folderList = await getFolders(localStorage.token).catch((error) => {
@@ -389,15 +389,15 @@
 	}}
 />
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 
 {#if $showSidebar}
 	<div
 		class=" fixed md:hidden z-40 top-0 right-0 left-0 bottom-0 bg-black/60 w-full min-h-screen h-screen flex justify-center overflow-hidden overscroll-contain"
-		on:mousedown={() => {
+		onmousedown={() => {
 			showSidebar.set(!$showSidebar);
 		}}
-	/>
+	></div>
 {/if}
 
 <div
@@ -420,7 +420,7 @@
 				class="flex flex-1 rounded-lg px-2 py-1 h-full hover:bg-gray-100 dark:hover:bg-gray-900 transition"
 				href="/"
 				draggable="false"
-				on:click={async () => {
+				onclick={async () => {
 					selectedChatId = null;
 					await goto('/');
 					const newChatButton = document.getElementById('new-chat-button');
@@ -447,7 +447,7 @@
 
 			<button
 				class=" cursor-pointer p-[7px] flex rounded-xl hover:bg-gray-100 dark:hover:bg-gray-900 transition"
-				on:click={() => {
+				onclick={() => {
 					showSidebar.set(!$showSidebar);
 				}}
 			>
@@ -475,7 +475,7 @@
 				<a
 					class="flex-grow flex space-x-3 rounded-lg px-2 py-[7px] hover:bg-gray-100 dark:hover:bg-gray-900 transition"
 					href="/workspace"
-					on:click={() => {
+					onclick={() => {
 						selectedChatId = null;
 						chatId.set('');
 
@@ -524,7 +524,7 @@
 				<Tooltip content={$i18n.t('New folder')}>
 					<button
 						class="p-1 rounded-lg bg-gray-50 hover:bg-gray-100 dark:bg-gray-950 dark:hover:bg-gray-900 transition"
-						on:click={() => {
+						onclick={() => {
 							createFolder();
 						}}
 					>
@@ -783,7 +783,7 @@
 					>
 						<button
 							class=" flex items-center rounded-xl py-2.5 px-2.5 w-full hover:bg-gray-100 dark:hover:bg-gray-900 transition"
-							on:click={() => {
+							onclick={() => {
 								showDropdown = !showDropdown;
 							}}
 						>

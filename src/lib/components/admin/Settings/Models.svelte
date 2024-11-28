@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { marked } from 'marked';
 	import fileSaver from 'file-saver';
 	const { saveAs } = fileSaver;
@@ -25,25 +27,20 @@
 	import { toast } from 'svelte-sonner';
 	import ConfirmDialog from '$lib/components/common/ConfirmDialog.svelte';
 
-	let importFiles;
-	let modelsImportInputElement: HTMLInputElement;
+	let importFiles = $state();
+	let modelsImportInputElement: HTMLInputElement = $state();
 
-	let models = null;
+	let models = $state(null);
 
 	let workspaceModels = null;
 	let baseModels = null;
 
-	let filteredModels = [];
-	let selectedModelId = null;
-	let showResetModal = false;
+	let filteredModels = $state([]);
+	let selectedModelId = $state(null);
+	let showResetModal = $state(false);
 
-	$: if (models) {
-		filteredModels = models.filter(
-			(m) => searchValue === '' || m.name.toLowerCase().includes(searchValue.toLowerCase())
-		);
-	}
 
-	let searchValue = '';
+	let searchValue = $state('');
 
 	const downloadModels = async (models) => {
 		let blob = new Blob([JSON.stringify(models)], {
@@ -126,6 +123,13 @@
 	onMount(async () => {
 		init();
 	});
+	run(() => {
+		if (models) {
+			filteredModels = models.filter(
+				(m) => searchValue === '' || m.name.toLowerCase().includes(searchValue.toLowerCase())
+			);
+		}
+	});
 </script>
 
 <ConfirmDialog
@@ -147,7 +151,7 @@
 			<div class="flex justify-between items-center">
 				<div class="flex items-center md:self-center text-xl font-medium px-0.5">
 					{$i18n.t('Models')}
-					<div class="flex self-center w-[1px] h-6 mx-2.5 bg-gray-50 dark:bg-gray-850" />
+					<div class="flex self-center w-[1px] h-6 mx-2.5 bg-gray-50 dark:bg-gray-850"></div>
 					<span class="text-lg font-medium text-gray-500 dark:text-gray-300"
 						>{filteredModels.length}</span
 					>
@@ -158,7 +162,7 @@
 						<button
 							class=" px-2.5 py-1 rounded-full flex gap-1 items-center"
 							type="button"
-							on:click={() => {
+							onclick={() => {
 								showResetModal = true;
 							}}
 						>
@@ -194,7 +198,7 @@
 						<button
 							class=" flex flex-1 text-left space-x-3.5 cursor-pointer w-full"
 							type="button"
-							on:click={() => {
+							onclick={() => {
 								selectedModelId = model.id;
 							}}
 						>
@@ -241,7 +245,7 @@
 							<button
 								class="self-center w-fit text-sm px-2 py-2 dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-xl"
 								type="button"
-								on:click={() => {
+								onclick={() => {
 									selectedModelId = model.id;
 								}}
 							>
@@ -295,7 +299,7 @@
 						type="file"
 						accept=".json"
 						hidden
-						on:change={() => {
+						onchange={() => {
 							console.log(importFiles);
 
 							let reader = new FileReader();
@@ -327,7 +331,7 @@
 
 					<button
 						class="flex text-xs items-center space-x-1 px-3 py-1.5 rounded-xl bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-200 transition"
-						on:click={() => {
+						onclick={() => {
 							modelsImportInputElement.click();
 						}}
 					>
@@ -353,7 +357,7 @@
 
 					<button
 						class="flex text-xs items-center space-x-1 px-3 py-1.5 rounded-xl bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-200 transition"
-						on:click={async () => {
+						onclick={async () => {
 							downloadModels(models);
 						}}
 					>

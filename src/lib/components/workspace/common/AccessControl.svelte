@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { getContext, onMount } from 'svelte';
 
 	const i18n = getContext('i18n');
@@ -9,12 +11,16 @@
 	import UserCircleSolid from '$lib/components/icons/UserCircleSolid.svelte';
 	import XMark from '$lib/components/icons/XMark.svelte';
 
-	export let onChange: Function = () => {};
 
-	export let accessControl = null;
+	interface Props {
+		onChange?: Function;
+		accessControl?: any;
+	}
 
-	let selectedGroupId = '';
-	let groups = [];
+	let { onChange = () => {}, accessControl = $bindable(null) }: Props = $props();
+
+	let selectedGroupId = $state('');
+	let groups = $state([]);
 
 	onMount(async () => {
 		groups = await getGroups(localStorage.token);
@@ -35,7 +41,9 @@
 		}
 	});
 
-	$: onChange(accessControl);
+	run(() => {
+		onChange(accessControl);
+	});
 </script>
 
 <div class=" rounded-lg flex flex-col gap-2">
@@ -84,7 +92,7 @@
 					id="models"
 					class="outline-none bg-transparent text-sm font-medium rounded-lg block w-fit pr-10 max-w-full placeholder-gray-400"
 					value={accessControl !== null ? 'private' : 'public'}
-					on:change={(e) => {
+					onchange={(e) => {
 						if (e.target.value === 'public') {
 							accessControl = null;
 						} else {
@@ -141,7 +149,7 @@
 									<button
 										class=" rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-850 transition"
 										type="button"
-										on:click={() => {
+										onclick={() => {
 											accessControl.read.group_ids = accessControl.read.group_ids.filter(
 												(id) => id !== group.id
 											);
@@ -185,7 +193,7 @@
 								<button
 									class=" p-1 rounded-xl bg-transparent dark:hover:bg-white/5 hover:bg-black/5 transition font-medium text-sm flex items-center space-x-1"
 									type="button"
-									on:click={() => {
+									onclick={() => {
 										if (selectedGroupId !== '') {
 											accessControl.read.group_ids = [
 												...accessControl.read.group_ids,

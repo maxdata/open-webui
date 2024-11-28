@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { marked } from 'marked';
 	import TurndownService from 'turndown';
 	const turndownService = new TurndownService();
@@ -24,17 +26,29 @@
 	// create a lowlight instance with all languages loaded
 	const lowlight = createLowlight(all);
 
-	export let className = 'input-prose';
-	export let placeholder = 'Type here...';
-	export let value = '';
-	export let id = '';
 
-	export let messageInput = false;
-	export let shiftEnter = false;
-	export let largeTextAsFile = false;
+	interface Props {
+		className?: string;
+		placeholder?: string;
+		value?: string;
+		id?: string;
+		messageInput?: boolean;
+		shiftEnter?: boolean;
+		largeTextAsFile?: boolean;
+	}
 
-	let element;
-	let editor;
+	let {
+		className = 'input-prose',
+		placeholder = 'Type here...',
+		value = $bindable(''),
+		id = '',
+		messageInput = false,
+		shiftEnter = false,
+		largeTextAsFile = false
+	}: Props = $props();
+
+	let element = $state();
+	let editor = $state();
 
 	const options = {
 		throwOnError: false
@@ -289,10 +303,12 @@
 	});
 
 	// Update the editor content if the external `value` changes
-	$: if (editor && value !== turndownService.turndown(editor.getHTML())) {
-		editor.commands.setContent(marked.parse(value)); // Update editor content
-		selectTemplate();
-	}
+	run(() => {
+		if (editor && value !== turndownService.turndown(editor.getHTML())) {
+			editor.commands.setContent(marked.parse(value)); // Update editor content
+			selectTemplate();
+		}
+	});
 </script>
 
-<div bind:this={element} class="relative w-full min-w-full h-full min-h-fit {className}" />
+<div bind:this={element} class="relative w-full min-w-full h-full min-h-fit {className}"></div>

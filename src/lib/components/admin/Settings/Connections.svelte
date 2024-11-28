@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import { toast } from 'svelte-sonner';
 	import { createEventDispatcher, onMount, getContext} from 'svelte';
 
@@ -27,15 +29,15 @@
 	};
 
 	// External	
-	let OPENAI_API_KEYS = [''];
-	let OPENAI_API_BASE_URLS = [''];
-	let OPENAI_API_CONFIGS = {};
+	let OPENAI_API_KEYS = $state(['']);
+	let OPENAI_API_BASE_URLS = $state(['']);
+	let OPENAI_API_CONFIGS = $state({});
 
-	let ENABLE_OPENAI_API: null | boolean = null;
+	let ENABLE_OPENAI_API: null | boolean = $state(null);
 	
-	let pipelineUrls = {};
-	let showAddOpenAIConnectionModal = false;
-	let showAddOllamaConnectionModal = false;
+	let pipelineUrls = $state({});
+	let showAddOpenAIConnectionModal = $state(false);
+	let showAddOllamaConnectionModal = $state(false);
 
 	const updateOpenAIHandler = async () => {
 		if (ENABLE_OPENAI_API !== null) {
@@ -136,10 +138,10 @@
 
 <form
 	class="flex flex-col h-full justify-between text-sm"
-	on:submit|preventDefault={() => {
+	onsubmit={preventDefault(() => {
 		updateOpenAIHandler();
 		dispatch('save');
-	}}
+	})}
 >
 	<div class=" overflow-y-scroll scrollbar-hidden h-full">
 		{#if ENABLE_OPENAI_API !== null}
@@ -170,7 +172,7 @@
 								<Tooltip content={$i18n.t(`Add Connection`)}>
 									<button
 										class="px-1"
-										on:click={() => {
+										onclick={() => {
 											showAddOpenAIConnectionModal = true;
 										}}
 										type="button"
