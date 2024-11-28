@@ -9,7 +9,7 @@
 
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { mobile, showSidebar, knowledge as _knowledge } from '$lib/stores';
+	import { showSidebar, knowledge as _knowledge } from '$lib/stores';
 
 	import { updateFileDataContentById, uploadFile } from '$lib/apis/files';
 	import {
@@ -23,8 +23,7 @@
 	} from '$lib/apis/knowledge';
 
 	import { transcribeAudio } from '$lib/apis/audio';
-	import { blobToFile } from '$lib/utils';
-	import { processFile } from '$lib/apis/retrieval';
+	import { blobToFile } from '$lib/utils';	
 
 	import Spinner from '$lib/components/common/Spinner.svelte';
 	import Files from './KnowledgeBase/Files.svelte';
