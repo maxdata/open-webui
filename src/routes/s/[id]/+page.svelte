@@ -1,19 +1,17 @@
 <script lang="ts">
-	import { onMount, tick, getContext } from 'svelte';
+	import { tick, getContext } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
 	import dayjs from 'dayjs';
 
-	import { settings, chatId, WEBUI_NAME, models } from '$lib/stores';
+	import { chatId, WEBUI_NAME, models } from '$lib/stores';
 	import { convertMessagesToHistory, createMessagesList } from '$lib/utils';
 
 	import { getChatByShareId } from '$lib/apis/chats';
 
 	import Messages from '$lib/components/chat/Messages.svelte';
-	import Navbar from '$lib/components/layout/Navbar.svelte';
 	import { getUserById } from '$lib/apis/users';
-	import { error } from '@sveltejs/kit';
 	import { getModels } from '$lib/apis';
 
 	const i18n = getContext('i18n');
@@ -22,10 +20,8 @@
 
 	let autoScroll = true;
 	let processing = '';
-	let messagesContainerElement: HTMLDivElement;
-
+	
 	// let chatId = $page.params.id;
-	let showModelSelector = false;
 	let selectedModels = [''];
 
 	let chat = null;

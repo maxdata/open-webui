@@ -16,20 +16,26 @@
             ],            
             "justMyCode": true,
         },
-        // Frontend
+        // node
         {
-            "name": "Svelte",
+            "name": "node",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "npm run dev --inspect"
+        },
+        // chrome
+        {
+            "name": "chrome",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:5173",
-            "webRoot": "${workspaceFolder}",
-            "userDataDir": false
+            "url": "http://127.0.0.1:5173",
+            "webRoot": "${workspaceFolder}"
         }
     ],
     "compounds": [
         {
-            "name": "Full Stack",
-            "configurations": ["FastAPI", "Svelte"]
+            "name": "svelte",
+            "configurations": ["node", "chrome"]
         }
     ]
 }
