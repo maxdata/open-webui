@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { run } from 'svelte/legacy';
-
 	import { getContext, tick } from 'svelte';
 	import { toast } from 'svelte-sonner';
 	import { models, settings, user } from '$lib/stores';
@@ -20,13 +18,10 @@
 	import SearchInput from '../layout/Sidebar/SearchInput.svelte';
 	import Search from '../icons/Search.svelte';
 
+	// Ensure i18n is a store
 	const i18n = getContext('i18n');
 
-	interface Props {
-		show?: boolean;
-	}
-
-	let { show = $bindable(false) }: Props = $props();
+	export let show = false;
 
 	interface SettingsTab {
 		id: string;
@@ -288,8 +283,8 @@
 		}
 	];
 
-	let search = $state('');
-	let visibleTabs = $state(searchData.map((tab) => tab.id));
+	let search = '';
+	let visibleTabs = searchData.map((tab) => tab.id);
 	let searchDebounceTimeout;
 
 	const searchSettings = (query: string): string[] => {
@@ -324,7 +319,7 @@
 		return await _getModels(localStorage.token);
 	};
 
-	let selectedTab = $state('general');
+	let selectedTab = 'general';
 
 	// Function to handle sideways scrolling
 	const scrollHandler = (event) => {
@@ -351,22 +346,20 @@
 		}
 	};
 
-	run(() => {
-		if (show) {
-			addScrollListener();
-		} else {
-			removeScrollListener();
-		}
-	});
+	$: if (show) {
+		addScrollListener();
+	} else {
+		removeScrollListener();
+	}
 </script>
 
 <Modal size="xl" bind:show>
 	<div class="text-gray-700 dark:text-gray-100">
 		<div class=" flex justify-between dark:text-gray-300 px-5 pt-4 pb-1">
-			<div class=" text-lg font-medium self-center">{$i18n.t('Settings')}</div>
+			<div class=" text-lg font-medium self-center">{i18n.t('Settings')}</div>
 			<button
 				class="self-center"
-				onclick={() => {
+				on:click={() => {
 					show = false;
 				}}
 			>
@@ -395,8 +388,8 @@
 					<input
 						class="w-full py-1.5 text-sm bg-transparent dark:text-gray-300 outline-none"
 						bind:value={search}
-						oninput={searchDebounceHandler}
-						placeholder={$i18n.t('Search')}
+						on:input={searchDebounceHandler}
+						placeholder={i18n.t('Search')}
 					/>
 				</div>
 
@@ -408,7 +401,7 @@
 								'general'
 									? ''
 									: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-								onclick={() => {
+								on:click={() => {
 									selectedTab = 'general';
 								}}
 							>
@@ -426,7 +419,7 @@
 										/>
 									</svg>
 								</div>
-								<div class=" self-center">{$i18n.t('General')}</div>
+								<div class=" self-center">{i18n.t('General')}</div>
 							</button>
 						{:else if tabId === 'interface'}
 							<button
@@ -434,7 +427,7 @@
 								'interface'
 									? ''
 									: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-								onclick={() => {
+								on:click={() => {
 									selectedTab = 'interface';
 								}}
 							>
@@ -452,7 +445,7 @@
 										/>
 									</svg>
 								</div>
-								<div class=" self-center">{$i18n.t('Interface')}</div>
+								<div class=" self-center">{i18n.t('Interface')}</div>
 							</button>
 						{:else if tabId === 'personalization'}
 							<button
@@ -460,14 +453,14 @@
 								'personalization'
 									? ''
 									: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-								onclick={() => {
+								on:click={() => {
 									selectedTab = 'personalization';
 								}}
 							>
 								<div class=" self-center mr-2">
 									<User />
 								</div>
-								<div class=" self-center">{$i18n.t('Personalization')}</div>
+								<div class=" self-center">{i18n.t('Personalization')}</div>
 							</button>
 						{:else if tabId === 'audio'}
 							<button
@@ -475,7 +468,7 @@
 								'audio'
 									? ''
 									: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-								onclick={() => {
+								on:click={() => {
 									selectedTab = 'audio';
 								}}
 							>
@@ -494,7 +487,7 @@
 										/>
 									</svg>
 								</div>
-								<div class=" self-center">{$i18n.t('Audio')}</div>
+								<div class=" self-center">{i18n.t('Audio')}</div>
 							</button>
 						{:else if tabId === 'chats'}
 							<button
@@ -502,7 +495,7 @@
 								'chats'
 									? ''
 									: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-								onclick={() => {
+								on:click={() => {
 									selectedTab = 'chats';
 								}}
 							>
@@ -520,7 +513,7 @@
 										/>
 									</svg>
 								</div>
-								<div class=" self-center">{$i18n.t('Chats')}</div>
+								<div class=" self-center">{i18n.t('Chats')}</div>
 							</button>
 						{:else if tabId === 'account'}
 							<button
@@ -528,7 +521,7 @@
 								'account'
 									? ''
 									: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-								onclick={() => {
+								on:click={() => {
 									selectedTab = 'account';
 								}}
 							>
@@ -546,7 +539,7 @@
 										/>
 									</svg>
 								</div>
-								<div class=" self-center">{$i18n.t('Account')}</div>
+								<div class=" self-center">{i18n.t('Account')}</div>
 							</button>
 						{:else if tabId === 'about'}
 							<button
@@ -554,7 +547,7 @@
 								'about'
 									? ''
 									: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-								onclick={() => {
+								on:click={() => {
 									selectedTab = 'about';
 								}}
 							>
@@ -572,7 +565,7 @@
 										/>
 									</svg>
 								</div>
-								<div class=" self-center">{$i18n.t('About')}</div>
+								<div class=" self-center">{i18n.t('About')}</div>
 							</button>
 						{:else if tabId === 'admin'}
 							{#if $user.role === 'admin'}
@@ -581,7 +574,7 @@
 									'admin'
 										? ''
 										: ' text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'}"
-									onclick={async () => {
+									on:click={async () => {
 										await goto('/admin/settings');
 										show = false;
 									}}
@@ -600,14 +593,14 @@
 											/>
 										</svg>
 									</div>
-									<div class=" self-center">{$i18n.t('Admin Settings')}</div>
+									<div class=" self-center">{i18n.t('Admin Settings')}</div>
 								</button>
 							{/if}
 						{/if}
 					{/each}
 				{:else}
 					<div class="text-center text-gray-500 mt-4">
-						{$i18n.t('No results found')}
+						{i18n.t('No results found')}
 					</div>
 				{/if}
 			</div>
@@ -617,28 +610,28 @@
 						{getModels}
 						{saveSettings}
 						on:save={() => {
-							toast.success($i18n.t('Settings saved successfully!'));
+							toast.success(i18n.t('Settings saved successfully!'));
 						}}
 					/>
 				{:else if selectedTab === 'interface'}
 					<Interface
 						{saveSettings}
 						on:save={() => {
-							toast.success($i18n.t('Settings saved successfully!'));
+							toast.success(i18n.t('Settings saved successfully!'));
 						}}
 					/>
 				{:else if selectedTab === 'personalization'}
 					<Personalization
 						{saveSettings}
 						on:save={() => {
-							toast.success($i18n.t('Settings saved successfully!'));
+							toast.success(i18n.t('Settings saved successfully!'));
 						}}
 					/>
 				{:else if selectedTab === 'audio'}
 					<Audio
 						{saveSettings}
 						on:save={() => {
-							toast.success($i18n.t('Settings saved successfully!'));
+							toast.success(i18n.t('Settings saved successfully!'));
 						}}
 					/>
 				{:else if selectedTab === 'chats'}
@@ -646,7 +639,7 @@
 				{:else if selectedTab === 'account'}
 					<Account
 						saveHandler={() => {
-							toast.success($i18n.t('Settings saved successfully!'));
+							toast.success(i18n.t('Settings saved successfully!'));
 						}}
 					/>
 				{:else if selectedTab === 'about'}

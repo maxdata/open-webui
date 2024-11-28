@@ -37,7 +37,7 @@
 	import XMark from '../icons/XMark.svelte';
 	import RichTextInput from '../common/RichTextInput.svelte';
 
-	const i18n = getContext('i18n');
+	const i18n = getContext('i18n') as SvelteStore<any>;
 
 
 
@@ -89,7 +89,7 @@
 		placeholder = ''
 	}: Props = $props();
 
-	let visionCapableModels = $state([]);
+	let visionCapableModels: Model[] = [];
 	run(() => {
 		visionCapableModels = [...(atSelectedModel ? [atSelectedModel] : selectedModels)].filter(
 			(model) => $models.find((m) => m.id === model)?.info?.meta?.capabilities?.vision ?? true
@@ -98,15 +98,17 @@
 
 	const scrollToBottom = () => {
 		const element = document.getElementById('messages-container');
-		element.scrollTo({
-			top: element.scrollHeight,
-			behavior: 'smooth'
-		});
+		if (element) {
+			element.scrollTo({
+				top: element.scrollHeight,
+				behavior: 'smooth'
+			});
+		}
 	};
 
 	const uploadFileHandler = async (file, fullContext: boolean = false) => {
 		if ($_user?.role !== 'admin' && !($_user?.permissions?.chat?.file_upload ?? true)) {
-			toast.error($i18n.t('You do not have permission to upload files.'));
+			toast.error(i18n.t('You do not have permission to upload files.'));
 			return null;
 		}
 
@@ -128,7 +130,7 @@
 		};
 
 		if (fileItem.size == 0) {
-			toast.error($i18n.t('You cannot upload an empty file.'));
+			toast.error(i18n.t('You cannot upload an empty file.'));
 			return null;
 		}
 
@@ -184,7 +186,7 @@
 				file.size > ($config?.file?.max_size ?? 0) * 1024 * 1024
 			) {
 				toast.error(
-					$i18n.t(`File size should not exceed {{maxSize}} MB.`, {
+					i18n.t(`File size should not exceed {{maxSize}} MB.`, {
 						maxSize: $config?.file?.max_size
 					})
 				);
@@ -193,19 +195,19 @@
 
 			if (['image/gif', 'image/webp', 'image/jpeg', 'image/png'].includes(file['type'])) {
 				if (visionCapableModels.length === 0) {
-					toast.error($i18n.t('Selected model(s) do not support image inputs'));
+					toast.error(i18n.t('Selected model(s) do not support image inputs'));
 					return;
 				}
 				let reader = new FileReader();
 				reader.onload = (event) => {
-					files = [
-						...files,
-						{
-							type: 'image',
-							url: `${event.target.result}`
-						}
-					];
-				};
+						files = [
+							...files,
+							{
+								type: 'image',
+								url: `${event.target.result}`
+							}
+						];
+					};
 				reader.readAsDataURL(file);
 			} else {
 				uploadFileHandler(file);
@@ -263,10 +265,11 @@
 		await tick();
 
 		const dropzoneElement = document.getElementById('chat-container');
-
-		dropzoneElement?.addEventListener('dragover', onDragOver);
-		dropzoneElement?.addEventListener('drop', onDrop);
-		dropzoneElement?.addEventListener('dragleave', onDragLeave);
+		if (dropzoneElement) {
+			dropzoneElement.addEventListener('dragover', onDragOver);
+			dropzoneElement.addEventListener('drop', onDrop);
+			dropzoneElement.addEventListener('dragleave', onDragLeave);
+		}
 	});
 
 	onDestroy(() => {
@@ -274,11 +277,10 @@
 		window.removeEventListener('keydown', handleKeyDown);
 
 		const dropzoneElement = document.getElementById('chat-container');
-
 		if (dropzoneElement) {
-			dropzoneElement?.removeEventListener('dragover', onDragOver);
-			dropzoneElement?.removeEventListener('drop', onDrop);
-			dropzoneElement?.removeEventListener('dragleave', onDragLeave);
+			dropzoneElement.removeEventListener('dragover', onDragOver);
+			dropzoneElement.removeEventListener('drop', onDrop);
+			dropzoneElement.removeEventListener('dragleave', onDragLeave);
 		}
 	});
 </script>
@@ -295,7 +297,8 @@
 							class=" absolute -top-12 left-0 right-0 flex justify-center z-30 pointer-events-none"
 						>
 							<button
-								class=" bg-white border border-gray-100 dark:border-none dark:bg-white/20 p-1.5 rounded-full pointer-events-auto"
+								class="bg-white border border-gray-100 dark:border-none dark:bg-white/20 p-1.5 rounded-full pointer-events-auto"
+								aria-label="Enable auto-scroll and scroll to bottom"
 								onclick={() => {
 									autoScroll = true;
 									scrollToBottom();
