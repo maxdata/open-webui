@@ -7,7 +7,6 @@
 
 	import { updateUserSettings } from '$lib/apis/users';
 
-	// Define the type for i18n if not already defined
 	interface I18n {
 		t: (key: string) => string;
 	}
@@ -16,7 +15,6 @@
 
 	export let selectedModels = [''];
 	export let disabled = false;
-
 	export let showSetDefault = true;
 
 	const saveDefaultModel = async () => {
@@ -25,34 +23,32 @@
 			toast.error(i18n.t('Choose a model before saving...'));
 			return;
 		}
-		settings.set({ ...$settings, models: selectedModels });
-		await updateUserSettings(localStorage.token, { ui: $settings });
+		settings.set({ ...settings, models: selectedModels });
+		await updateUserSettings(localStorage.token, { ui: settings });
 
 		toast.success(i18n.t('Default model updated'));
 	};
 
-	$: if (selectedModels.length > 0 && $models.length > 0) {
-		selectedModels = selectedModels.map((model) =>
-			$models.map((m) => m.id).includes(model) ? model : ''
-		);
-	}
+	let processedModels = selectedModels.map((model) =>
+		models.map((m) => m.id).includes(model) ? model : ''
+	);
 </script>
 
 <div class="flex flex-col w-full items-start">
-	{#each selectedModels as selectedModel, selectedModelIdx}
+	{#each processedModels as selectedModel, selectedModelIdx}
 		<div class="flex w-full max-w-fit">
 			<div class="overflow-hidden w-full">
 				<div class="mr-1 max-w-full">
 					<Selector
 						id={`${selectedModelIdx}`}
 						placeholder={i18n.t('Select a model')}
-						items={$models.map((model) => ({
+						items={models.map((model) => ({
 							value: model.id,
 							label: model.name,
 							model: model
 						}))}
-						showTemporaryChatControl={$user && $user.role === 'user' && $user.permissions
-							? ($user.permissions.chat?.temporary ?? true)
+						showTemporaryChatControl={user && user.role === 'user' && user.permissions
+							? (user.permissions.chat?.temporary ?? true)
 							: true}
 						bind:value={selectedModel}
 					/>
