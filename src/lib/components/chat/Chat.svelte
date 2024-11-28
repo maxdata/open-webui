@@ -1,4 +1,3 @@
-<!-- @migration-task Error while migrating Svelte code: Cannot subscribe to stores that are not declared at the top level of the component -->
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
 	import { toast } from 'svelte-sonner';
@@ -124,6 +123,10 @@
 	let chatFiles = [];
 	let files = [];
 	let params = {};
+
+	// Access the current value of the stores at the top level
+	let currentChatId = get(chatId);
+	let tempEnabled = get(temporaryChatEnabled);
 
 	$: if (chatIdProp) {
 		(async () => {
@@ -689,7 +692,7 @@
 
 		await tick();
 
-		if ($chatId == chatId) {
+		if (_chatId === currentChatId) {
 			if (!$temporaryChatEnabled) {
 				chat = await updateChatById(localStorage.token, chatId, {
 					models: selectedModels,
@@ -741,7 +744,7 @@
 			}
 		}
 
-		if ($chatId == chatId) {
+		if (_chatId === currentChatId) {
 			if (!$temporaryChatEnabled) {
 				chat = await updateChatById(localStorage.token, chatId, {
 					models: selectedModels,
@@ -2139,18 +2142,19 @@
 	};
 
 	const saveChatHandler = async (_chatId) => {
-		if ($chatId == _chatId) {
-			if (!$temporaryChatEnabled) {
-				chat = await updateChatById(localStorage.token, _chatId, {
-					models: selectedModels,
-					history: history,
-					messages: createMessagesList(history.currentId),
-					params: params,
-					files: chatFiles
-				});
-
-				currentChatPage.set(1);
-				await chats.set(await getChatList(localStorage.token, $currentChatPage));
+		if (_chatId === currentChatId) {
+			if (!tempEnabled) {
+				try {
+					chat = await updateChatById(localStorage.token, _chatId, {
+						models: selectedModels,
+						messages: messages,
+						history: history,
+						params: params,
+						files: chatFiles
+					});
+				} catch (error) {
+					console.error('Error updating chat:', error);
+				}
 			}
 		}
 	};

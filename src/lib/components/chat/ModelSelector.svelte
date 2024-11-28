@@ -59,7 +59,7 @@
 						showTemporaryChatControl={$user.role === 'user'
 							? ($user?.permissions?.chat?.temporary ?? true)
 							: true}
-						bind:value={selectedModel}
+						bind:value={selectedModels[selectedModelIdx]}
 					/>
 				</div>
 			</div>
