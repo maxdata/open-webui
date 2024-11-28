@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
-	import { createEventDispatcher, onMount, getContext, tick } from 'svelte';
+	import { createEventDispatcher, onMount, getContext} from 'svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -16,8 +16,10 @@
 
 	import OpenAIConnection from './Connections/OpenAIConnection.svelte';
 	import AddConnectionModal from './Connections/AddConnectionModal.svelte';
-	
+	import { _ } from 'svelte-i18n';
+
 	const i18n = getContext('i18n');
+	
 
 	const getModels = async () => {
 		const models = await _getModels(localStorage.token);
@@ -67,7 +69,7 @@
 			});
 
 			if (res) {
-				toast.success($i18n.t('OpenAI API settings updated'));
+				toast.success($_('OpenAI API settings updated'));
 				await models.set(await getModels());
 			}
 		}
@@ -84,13 +86,9 @@
 
 	onMount(async () => {
 		if ($user.role === 'admin') {
-			let ollamaConfig = {};
 			let openaiConfig = {};
 
 			await Promise.all([
-				(async () => {
-					ollamaConfig = await getOllamaConfig(localStorage.token);
-				})(),
 				(async () => {
 					openaiConfig = await getOpenAIConfig(localStorage.token);
 				})()
