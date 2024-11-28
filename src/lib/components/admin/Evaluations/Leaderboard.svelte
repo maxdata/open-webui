@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { run } from 'svelte/legacy';
 
-	import * as ort from 'onnxruntime-web';
 	import { AutoModel, AutoTokenizer } from '@huggingface/transformers';
 
 	import { onMount, getContext } from 'svelte';
