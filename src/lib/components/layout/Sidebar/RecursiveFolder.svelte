@@ -420,28 +420,27 @@
 					{/if}
 				</div>
 
-				<button
-					class="absolute z-10 right-2 invisible group-hover:visible self-center flex items-center dark:text-gray-300"
-					on:pointerup={(e) => {
+				<div class="absolute z-10 right-2 invisible group-hover:visible self-center flex items-center dark:text-gray-300"
+					 on:pointerup={(e) => {
 						e.stopPropagation();
-					}}
+					 }}
 				>
 					<FolderMenu
 						on:rename={() => {
 							editHandler();
 						}}
 						on:delete={() => {
-							showDeleteConfirm = true;
+								showDeleteConfirm = true;
 						}}
 						on:export={() => {
 							exportHandler();
 						}}
 					>
-						<button class="p-0.5 dark:hover:bg-gray-850 rounded-lg touch-auto" on:click={(e) => {}}>
+						<div class="p-0.5 dark:hover:bg-gray-850 rounded-lg touch-auto" on:click={(e) => {}}>
 							<EllipsisHorizontal className="size-4" strokeWidth="2.5" />
-						</button>
+						</div>
 					</FolderMenu>
-				</button>
+				</div>
 			</button>
 		</div>
 

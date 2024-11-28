@@ -1101,7 +1101,7 @@
   dependencies:
     debug "^4.3.7"
 
-"@sveltejs/vite-plugin-svelte@^3.0.0 || ^4.0.0-next.1", "@sveltejs/vite-plugin-svelte@^4.0.0-next.0||^4.0.0", "@sveltejs/vite-plugin-svelte@^4.0.0-next.1":
+"@sveltejs/vite-plugin-svelte@^3.0.0 || ^4.0.0-next.1", "@sveltejs/vite-plugin-svelte@^4.0.0-next.0||^4.0.0":
   version "4.0.2"
   resolved "https://registry.npmjs.org/@sveltejs/vite-plugin-svelte/-/vite-plugin-svelte-4.0.2.tgz"
   integrity sha512-Y9r/fWy539XlAC7+5wfNJ4zH6TygUYoQ0Eegzp0zDDqhJ54+92gOyOX1l4MO1cJSx0O+Gp13YePT5XEa3+kX0w==
@@ -3723,6 +3723,11 @@ fs.realpath@^1.0.0:
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
+fsevents@~2.3.2, fsevents@~2.3.3:
+  version "2.3.3"
+  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz"
+  integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
+
 function-bind@^1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/function-bind/-/function-bind-1.1.2.tgz"
@@ -6143,7 +6148,7 @@ svelte-sonner@^0.3.28:
   resolved "https://registry.npmjs.org/svelte-sonner/-/svelte-sonner-0.3.28.tgz"
   integrity sha512-K3AmlySeFifF/cKgsYNv5uXqMVNln0NBAacOYgmkQStLa/UoU0LhfAACU6Gr+YYC8bOCHdVmFNoKuDbMEsppJg==
 
-"svelte@^3 || ^4 || ^5", "svelte@^3.0.0 || ^4.0.0 || ^5.0.0", "svelte@^3.0.0 || ^4.0.0 || ^5.0.0-next.1", "svelte@^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0", "svelte@^3.37.0 || ^4.0.0 || ^5.0.0", "svelte@^3.55.0 || ^4.0.0 || ^5.0.0", "svelte@^4.0.0 || ^5.0.0-next.0", "svelte@^4.0.0 || ^5.0.0-next.1", "svelte@^4.0.0 || ^5.0.0-next.118", "svelte@^5.0.0-next.96 || ^5.0.0", svelte@^5.2.10, "svelte@>=3 <5", svelte@>=5.0.0:
+"svelte@^3 || ^4 || ^5", "svelte@^3.0.0 || ^4.0.0 || ^5.0.0", "svelte@^3.0.0 || ^4.0.0 || ^5.0.0-next.1", "svelte@^3.2.0 || ^4.0.0-next.0 || ^5.0.0-next.0", "svelte@^3.37.0 || ^4.0.0 || ^5.0.0", "svelte@^3.55.0 || ^4.0.0 || ^5.0.0", "svelte@^4.0.0 || ^5.0.0-next.0", "svelte@^4.0.0 || ^5.0.0-next.1", "svelte@^4.0.0 || ^5.0.0-next.118", "svelte@^5.0.0-next.96 || ^5.0.0", "svelte@>=3 <5", svelte@>=5.0.0:
   version "5.2.10"
   resolved "https://registry.npmjs.org/svelte/-/svelte-5.2.10.tgz"
   integrity sha512-ON0OyO7vOmSjTc9mLjusu3vf1I7BvjovbiRB7j84F1WZMXV6dR+Tj4btIzxQxMHfzbGskaFmRa7qjgmBSVBnhQ==

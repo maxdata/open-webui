@@ -1,4 +1,3 @@
-<!-- @migration-task Error while migrating Svelte code: Cannot subscribe to stores that are not declared at the top level of the component -->
 <script lang="ts">
 	import { v4 as uuidv4 } from 'uuid';
 	import { toast } from 'svelte-sonner';
@@ -47,9 +46,11 @@
 		splitStream
 	} from '$lib/utils';
 
+	import { generateChatCompletion } from '$lib/apis/ollama';
 	import {
 		addTagById,
 		createNewChat,
+		deleteTagById,
 		deleteTagsById,
 		getAllTags,
 		getChatById,
@@ -887,11 +888,10 @@
 		await tick();
 
 		// Reset chat input textarea
-		const chatInputContainer = document.getElementById('chat-input-container');
+		const chatInputElement = document.getElementById('chat-input');
 
-		if (chatInputContainer) {
-			chatInputContainer.value = '';
-			chatInputContainer.style.height = '';
+		if (chatInputElement) {
+			chatInputElement.style.height = '';
 		}
 
 		const _files = JSON.parse(JSON.stringify(files));
@@ -1976,7 +1976,7 @@
 				}
 			);
 
-			return title;
+			return title ? title : (lastUserMessage?.content ?? 'New Chat');
 		} else {
 			return lastUserMessage?.content ?? 'New Chat';
 		}
@@ -2309,7 +2309,11 @@
 								on:submit={async (e) => {
 									if (e.detail) {
 										await tick();
-										submitPrompt(e.detail.replaceAll('\n\n', '\n'));
+										submitPrompt(
+											($settings?.richTextInput ?? true)
+												? e.detail.replaceAll('\n\n', '\n')
+												: e.detail
+										);
 									}
 								}}
 							/>
@@ -2346,7 +2350,11 @@
 								on:submit={async (e) => {
 									if (e.detail) {
 										await tick();
-										submitPrompt(e.detail.replaceAll('\n\n', '\n'));
+										submitPrompt(
+											($settings?.richTextInput ?? true)
+												? e.detail.replaceAll('\n\n', '\n')
+												: e.detail
+										);
 									}
 								}}
 							/>
