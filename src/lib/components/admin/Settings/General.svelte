@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getBackendConfig, getWebhookUrl, updateWebhookUrl } from '$lib/apis';
+	import { getWebhookUrl, updateWebhookUrl } from '$lib/apis';
 	import {
 		getAdminConfig,
 		getLdapConfig,
@@ -11,15 +11,14 @@
 	import SensitiveInput from '$lib/components/common/SensitiveInput.svelte';
 	import Switch from '$lib/components/common/Switch.svelte';
 	import Tooltip from '$lib/components/common/Tooltip.svelte';
-	import { config } from '$lib/stores';
-	import { onMount, getContext } from 'svelte';
 	import { toast } from 'svelte-sonner';
+	import { onMount, getContext } from 'svelte';
 
 	const i18n = getContext('i18n');
 
 	export let saveHandler: Function;
 
-	let adminConfig = null;
+	let adminConfig: any = null;
 	let webhookUrl = '';
 
 	// LDAP
