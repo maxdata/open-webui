@@ -2,16 +2,14 @@
 
 import json
 import logging
-import mimetypes
 import os
 import shutil
 
 import uuid
 from datetime import datetime
-from pathlib import Path
-from typing import Iterator, Optional, Sequence, Union
+from typing import Optional
 
-from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile, status
+from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import tiktoken
@@ -766,7 +764,6 @@ def save_docs_to_vector_db(
         for doc in docs
     ]
 
-    # ChromaDB does not like datetime formats
     # for meta-data so convert them to string.
     for metadata in metadatas:
         for key, value in metadata.items():

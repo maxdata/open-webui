@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
+	import { readable } from 'svelte/store';
 	import CodeBlock from './CodeBlock.svelte';
 	import Modal from '$lib/components/common/Modal.svelte';
 	import Spinner from '$lib/components/common/Spinner.svelte';
 	import Badge from '$lib/components/common/Badge.svelte';
-	const i18n = getContext('i18n');
+
+	// Assuming i18n is a context value, wrap it in a readable store
+	const i18nContext = getContext('i18n');
+	const i18n = readable(i18nContext);
 
 	interface Props {
 		show?: boolean;
@@ -52,6 +56,7 @@
 					show = false;
 					codeExecution = null;
 				}}
+				aria-label="Close code execution modal"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

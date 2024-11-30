@@ -36,6 +36,7 @@
 			</div>
 			<button
 				class="self-center"
+				aria-label="Close changelog modal"
 				onclick={() => {
 					localStorage.version = $config.version;
 					show = false;

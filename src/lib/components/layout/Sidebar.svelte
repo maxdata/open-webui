@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
 	import { v4 as uuidv4 } from 'uuid';
-
 	import { goto } from '$app/navigation';
+	import { writable } from 'svelte/store';
 	import {
 		user,
 		chats,
@@ -52,20 +52,18 @@
 
 	const BREAKPOINT = 768;
 
-	let navElement = $state();
-	let search = $state('');
-
-	let shiftKey = $state(false);
-
-	let selectedChatId = $state(null);
-	let showDropdown = $state(false);
-	let showPinnedChat = $state(true);
+	let navElement = writable(null);
+	let search = writable('');
+	let shiftKey = writable(false);
+	let selectedChatId = writable(null);
+	let showDropdown = writable(false);
+	let showPinnedChat = writable(true);
 
 	// Pagination variables
-	let chatListLoading = $state(false);
-	let allChatsLoaded = $state(false);
+	let chatListLoading = writable(false);
+	let allChatsLoaded = writable(false);
 
-	let folders = $state({});
+	let folders = writable({});
 
 	const initFolders = async () => {
 		const folderList = await getFolders(localStorage.token).catch((error) => {
@@ -447,6 +445,7 @@
 
 			<button
 				class=" cursor-pointer p-[7px] flex rounded-xl hover:bg-gray-100 dark:hover:bg-gray-900 transition"
+				aria-label="Toggle Sidebar"
 				onclick={() => {
 					showSidebar.set(!$showSidebar);
 				}}

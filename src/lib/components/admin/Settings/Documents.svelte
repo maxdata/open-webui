@@ -15,14 +15,11 @@
 		updateEmbeddingConfig,
 		getRerankingConfig,
 		updateRerankingConfig,
-		resetUploadDir,
 		getRAGConfig,
 		updateRAGConfig
 	} from '$lib/apis/retrieval';
 
-	import { knowledge, models } from '$lib/stores';
-	import { getKnowledgeBases } from '$lib/apis/knowledge';
-	import { uploadDir, deleteAllFiles, deleteFileById } from '$lib/apis/files';
+	import { deleteAllFiles } from '$lib/apis/files';
 
 	import ResetUploadDirConfirmDialog from '$lib/components/common/ConfirmDialog.svelte';
 	import ResetVectorDBConfirmDialog from '$lib/components/common/ConfirmDialog.svelte';

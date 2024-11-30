@@ -30,7 +30,7 @@
 	};
 
 	let processedModels = selectedModels.map((model) =>
-		models.map((m) => m.id).includes(model) ? model : ''
+		Array.isArray(models) && models.map((m) => m.id).includes(model) ? model : ''
 	);
 </script>
 

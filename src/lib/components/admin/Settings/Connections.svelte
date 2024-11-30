@@ -139,10 +139,11 @@
 
 <form
 	class="flex flex-col h-full justify-between text-sm"
-	onsubmit={preventDefault(() => {
+	onsubmit={(event) => {
+		event.preventDefault();
 		updateOpenAIHandler();
 		dispatch('save');
-	})}
+	}}
 >
 	<div class=" overflow-y-scroll scrollbar-hidden h-full">
 		{#if ENABLE_OPENAI_API !== null}
