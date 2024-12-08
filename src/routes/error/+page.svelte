@@ -8,6 +8,9 @@
 	let loaded = $state(false);
 
 	onMount(async () => {
+		
+		console.log($config);
+
 		if ($config) {
 			await goto('/');
 		}

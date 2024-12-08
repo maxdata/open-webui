@@ -13,6 +13,8 @@
 		"$lib/*": ["src/lib/*"]
 	  }
 	},
+	"moduleResolution": "node",
+	"types": ["node", "svelte"],
 	"include": ["src/**/*", "src/**/*.svelte", "src/types"],
 	"exclude": ["node_modules"]
   }
