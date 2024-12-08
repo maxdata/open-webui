@@ -67,6 +67,7 @@
 				onclick={() => {
 					show = false;
 				}}
+				aria-label="Close citation modal"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

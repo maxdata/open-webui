@@ -248,6 +248,7 @@
 							{#if siblings.length > 1}
 								<div class="flex self-center" dir="ltr">
 									<button
+										aria-label="Show previous message"
 										class="self-center p-1 hover:bg-black/5 dark:hover:bg-white/5 dark:hover:text-white hover:text-black rounded-md transition"
 										onclick={() => {
 											showPreviousMessage(message);
@@ -274,6 +275,7 @@
 									</div>
 
 									<button
+										aria-label="Show next message"
 										class="self-center p-1 hover:bg-black/5 dark:hover:bg-white/5 dark:hover:text-white hover:text-black rounded-md transition"
 										onclick={() => {
 											showNextMessage(message);
@@ -300,6 +302,7 @@
 						{#if !readOnly}
 							<Tooltip content={$i18n.t('Edit')} placement="bottom">
 								<button
+									aria-label="Edit message"
 									class="invisible group-hover:visible p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition edit-user-message-button"
 									onclick={() => {
 										editMessageHandler();
@@ -325,6 +328,7 @@
 
 						<Tooltip content={$i18n.t('Copy')} placement="bottom">
 							<button
+								aria-label="Copy message"
 								class="invisible group-hover:visible p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition"
 								onclick={() => {
 									copyToClipboard(message.content);
@@ -350,6 +354,7 @@
 						{#if !isFirstMessage && !readOnly}
 							<Tooltip content={$i18n.t('Delete')} placement="bottom">
 								<button
+									aria-label="Delete message"
 									class="invisible group-hover:visible p-1 rounded dark:hover:text-white hover:text-black transition"
 									onclick={() => {
 										deleteMessageHandler();
@@ -377,6 +382,7 @@
 							{#if siblings.length > 1}
 								<div class="flex self-center" dir="ltr">
 									<button
+										aria-label="Show previous message"
 										class="self-center p-1 hover:bg-black/5 dark:hover:bg-white/5 dark:hover:text-white hover:text-black rounded-md transition"
 										onclick={() => {
 											showPreviousMessage(message);
@@ -403,6 +409,7 @@
 									</div>
 
 									<button
+										aria-label="Show next message"
 										class="self-center p-1 hover:bg-black/5 dark:hover:bg-white/5 dark:hover:text-white hover:text-black rounded-md transition"
 										onclick={() => {
 											showNextMessage(message);

@@ -112,6 +112,7 @@
 	{#if dismissible}
 		<div class=" absolute -top-1 -right-1">
 			<button
+				aria-label="Dismiss file"
 				class=" bg-gray-400 text-white border border-white rounded-full group-hover:visible invisible transition"
 				type="button"
 				onclick={stopPropagation(() => {

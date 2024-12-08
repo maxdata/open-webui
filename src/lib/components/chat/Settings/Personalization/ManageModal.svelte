@@ -45,6 +45,7 @@
 		<div class=" flex justify-between dark:text-gray-300 px-5 pt-4 pb-1">
 			<div class=" text-lg font-medium self-center">{$i18n.t('Memory')}</div>
 			<button
+				aria-label="Close memory modal"
 				class="self-center"
 				onclick={() => {
 					show = false;
@@ -106,6 +107,7 @@
 																selectedMemory = memory;
 																showEditMemoryModal = true;
 															}}
+															aria-label="Edit memory"
 														>
 															<svg
 																xmlns="http://www.w3.org/2000/svg"
@@ -141,6 +143,7 @@
 																	memories = await getMemories(localStorage.token);
 																}
 															}}
+															aria-label="Delete memory"
 														>
 															<svg
 																xmlns="http://www.w3.org/2000/svg"

@@ -186,6 +186,7 @@
 
 					<div class="flex space-x-1.5 items-center">
 						<button
+							aria-label="Archive all chats"
 							class="hover:text-white transition"
 							onclick={() => {
 								archiveAllChatsHandler();
@@ -206,6 +207,7 @@
 							</svg>
 						</button>
 						<button
+							aria-label="Cancel archive all chats"
 							class="hover:text-white transition"
 							onclick={() => {
 								showArchiveConfirm = false;
@@ -273,6 +275,7 @@
 
 					<div class="flex space-x-1.5 items-center">
 						<button
+							aria-label="Delete all chats"
 							class="hover:text-white transition"
 							onclick={() => {
 								deleteAllChatsHandler();
@@ -293,6 +296,7 @@
 							</svg>
 						</button>
 						<button
+							aria-label="Cancel delete all chats"
 							class="hover:text-white transition"
 							onclick={() => {
 								showDeleteConfirm = false;

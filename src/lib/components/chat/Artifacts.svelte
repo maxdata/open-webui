@@ -254,6 +254,7 @@
 			<div class="flex items-center space-x-2">
 				<div class="flex items-center gap-0.5 self-center min-w-fit" dir="ltr">
 					<button
+						aria-label="Show previous artifact"
 						class="self-center p-1 hover:bg-black/5 dark:hover:bg-white/5 dark:hover:text-white hover:text-black rounded-md transition disabled:cursor-not-allowed"
 						onclick={() => navigateContent('prev')}
 						disabled={contents.length <= 1}
@@ -282,6 +283,7 @@
 					</div>
 
 					<button
+						aria-label="Show next artifact"
 						class="self-center p-1 hover:bg-black/5 dark:hover:bg-white/5 dark:hover:text-white hover:text-black rounded-md transition disabled:cursor-not-allowed"
 						onclick={() => navigateContent('next')}
 						disabled={contents.length <= 1}

@@ -715,6 +715,7 @@
 										onclick={() => {
 											showPreviousMessage(message);
 										}}
+										aria-label="Show previous message"
 									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
@@ -743,6 +744,7 @@
 										onclick={() => {
 											showNextMessage(message);
 										}}
+										aria-label="Show next message"
 									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
@@ -773,6 +775,7 @@
 												onclick={() => {
 													editMessageHandler();
 												}}
+												aria-label="Edit message"
 											>
 												<svg
 													xmlns="http://www.w3.org/2000/svg"
@@ -801,6 +804,7 @@
 										onclick={() => {
 											copyToClipboard(message.content);
 										}}
+										aria-label="Copy message"
 									>
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
@@ -830,6 +834,7 @@
 												toggleSpeakMessage();
 											}
 										}}
+										aria-label="Read aloud"
 									>
 										{#if loadingSpeech}
 											<svg
@@ -1016,6 +1021,7 @@
 												class=" {isLastMessage
 													? 'visible'
 													: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition whitespace-pre-wrap"
+												aria-label="Generation info"
 												onclick={() => {
 													console.log(message);
 												}}
@@ -1052,6 +1058,7 @@
 													? 'bg-gray-100 dark:bg-gray-800'
 													: ''} dark:hover:text-white hover:text-black transition disabled:cursor-progress disabled:hover:bg-transparent"
 												disabled={feedbackLoading}
+												aria-label="Good response"
 												onclick={async () => {
 													await feedbackHandler(1);
 													window.setTimeout(() => {
@@ -1088,6 +1095,7 @@
 													? 'bg-gray-100 dark:bg-gray-800'
 													: ''} dark:hover:text-white hover:text-black transition disabled:cursor-progress disabled:hover:bg-transparent"
 												disabled={feedbackLoading}
+												aria-label="Bad response"
 												onclick={async () => {
 													await feedbackHandler(-1);
 													window.setTimeout(() => {
@@ -1120,6 +1128,7 @@
 											<button
 												type="button"
 												id="continue-response-button"
+												aria-label="Continue response"	
 												class="{isLastMessage
 													? 'visible'
 													: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition regenerate-response-button"
@@ -1153,6 +1162,7 @@
 									<Tooltip content={$i18n.t('Regenerate')} placement="bottom">
 										<button
 											type="button"
+											aria-label="Regenerate response"
 											class="{isLastMessage
 												? 'visible'
 												: 'invisible group-hover:visible'} p-1.5 hover:bg-black/5 dark:hover:bg-white/5 rounded-lg dark:hover:text-white hover:text-black transition regenerate-response-button"

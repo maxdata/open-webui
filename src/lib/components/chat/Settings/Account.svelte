@@ -359,6 +359,7 @@
 
 								<Tooltip content={$i18n.t('Create new key')}>
 									<button
+										aria-label="Create new key"
 										class=" px-1.5 py-1 dark:hover:bg-gray-850transition rounded-lg"
 										onclick={() => {
 											createAPIKeyHandler();

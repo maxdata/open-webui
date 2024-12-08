@@ -329,6 +329,7 @@
 >
 	<div class="flex items-center mr-1">
 		<button
+			aria-label="Stop recording"
 			type="button"
 			class="p-1.5
 
@@ -487,6 +488,7 @@
 				</div>
 			{:else}
 				<button
+					aria-label="Confirm recording"
 					type="button"
 					class="p-1.5 bg-indigo-500 text-white dark:bg-indigo-500 dark:text-blue-950 rounded-full"
 					onclick={async () => {

@@ -416,6 +416,7 @@
 				{#if id === $chatId}
 					<!-- Shortcut support using "delete-chat-button" id -->
 					<button
+						aria-label="Delete chat"
 						id="delete-chat-button"
 						class="hidden"
 						onclick={() => {

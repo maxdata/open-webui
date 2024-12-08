@@ -451,7 +451,11 @@
 							exportHandler();
 						}}
 					>
-						<div class="p-0.5 dark:hover:bg-gray-850 rounded-lg touch-auto" onclick={(e) => {}}>
+						<div
+							class="p-0.5 dark:hover:bg-gray-850 rounded-lg touch-auto"
+							aria-label="Folder context menu"
+							onclick={(e) => {}}
+						>
 							<EllipsisHorizontal className="size-4" strokeWidth="2.5" />
 						</div>
 					</FolderMenu>

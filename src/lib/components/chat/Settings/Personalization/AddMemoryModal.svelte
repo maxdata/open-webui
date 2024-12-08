@@ -43,6 +43,7 @@
 				{$i18n.t('Add Memory')}
 			</div>
 			<button
+				aria-label="Close add memory modal"
 				class="self-center"
 				onclick={() => {
 					show = false;

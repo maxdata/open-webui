@@ -120,6 +120,7 @@
 		<!-- <div class=" text-sm">{$i18n.t('Tell us more:')}</div> -->
 
 		<button
+			aria-label="Close rate comment"
 			onclick={() => {
 				show = false;
 			}}

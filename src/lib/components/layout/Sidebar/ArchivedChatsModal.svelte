@@ -87,6 +87,7 @@
 		<div class=" flex justify-between dark:text-gray-300 px-5 pt-4 pb-1">
 			<div class=" text-lg font-medium self-center">{$i18n.t('Archived Chats')}</div>
 			<button
+				aria-label="Close archived chats modal"
 				class="self-center"
 				onclick={() => {
 					show = false;
@@ -175,6 +176,7 @@
 													<div class="flex justify-end w-full">
 														<Tooltip content={$i18n.t('Unarchive Chat')}>
 															<button
+																aria-label="Unarchive chat"
 																class="self-center w-fit text-sm px-2 py-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl"
 																onclick={async () => {
 																	unarchiveChatHandler(chat.id);
@@ -199,6 +201,7 @@
 
 														<Tooltip content={$i18n.t('Delete Chat')}>
 															<button
+																aria-label="Delete chat"
 																class="self-center w-fit text-sm px-2 py-2 hover:bg-black/5 dark:hover:bg-white/5 rounded-xl"
 																onclick={async () => {
 																	deleteChatHandler(chat.id);

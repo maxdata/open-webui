@@ -529,6 +529,7 @@
 																files.splice(fileIdx, 1);
 																files = files;
 															}}
+															aria-label="Remove file"
 														>
 															<svg
 																xmlns="http://www.w3.org/2000/svg"
@@ -1065,6 +1066,7 @@
 														: 'text-white bg-gray-200 dark:text-gray-900 dark:bg-gray-700 disabled'} transition rounded-full p-1.5 m-0.5 self-center"
 													type="submit"
 													disabled={prompt === ''}
+													aria-label="Send message"
 												>
 													<svg
 														xmlns="http://www.w3.org/2000/svg"
@@ -1090,6 +1092,7 @@
 												onclick={() => {
 													stopResponse();
 												}}
+												aria-label="Stop"
 											>
 												<svg
 													xmlns="http://www.w3.org/2000/svg"

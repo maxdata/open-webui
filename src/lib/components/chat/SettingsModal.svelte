@@ -362,6 +362,7 @@
 				on:click={() => {
 					show = false;
 				}}
+				aria-label="Close settings modal"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -667,7 +668,4 @@
 		scrollbar-width: none; /* Firefox */
 	}
 
-	input[type='number'] {
-		-moz-appearance: textfield; /* Firefox */
-	}
 </style>

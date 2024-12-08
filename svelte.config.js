@@ -14,7 +14,10 @@ const config = {
 			pages: 'build',
 			assets: 'build',
 			fallback: 'index.html'
-		})
+		}),
+		alias: {
+			$lib: './src/lib'
+		}
 	},
 	onwarn: (warning, handler) => {
 		const { code, _ } = warning;
