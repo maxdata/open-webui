@@ -7,8 +7,12 @@
 	  "esModuleInterop": true,
 	  "skipLibCheck": true,
 	  "forceConsistentCasingInFileNames": true,
-	  "types": ["svelte"]
+	  "types": ["svelte"],
+	  "baseUrl": ".",
+	  "paths": {
+		"$lib/*": ["src/lib/*"]
+	  }
 	},
-	"include": ["src/**/*", "src/**/*.svelte"],
+	"include": ["src/**/*", "src/**/*.svelte", "src/types"],
 	"exclude": ["node_modules"]
   }
