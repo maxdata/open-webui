@@ -111,34 +111,33 @@
 
 	{#if dismissible}
 		<div class=" absolute -top-1 -right-1">
-			<button
+			<div
+				role="button"
 				aria-label="Dismiss file"
-				class=" bg-gray-400 text-white border border-white rounded-full group-hover:visible invisible transition"
-				type="button"
+				tabindex="0"
+				class="bg-gray-400 text-white border border-white rounded-full group-hover:visible invisible transition cursor-pointer"
 				onclick={stopPropagation(() => {
 					dispatch('dismiss');
 				})}
+				onkeydown={(event) => {
+					if (event.key === 'Enter' || event.key === ' ') {
+						stopPropagation(() => {
+							dispatch('dismiss');
+						})();
+					}
+				}}
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					viewBox="0 0 20 20"
 					fill="currentColor"
 					class="w-4 h-4"
-				>
+					>
 					<path
 						d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"
 					/>
 				</svg>
-			</button>
-
-			<!-- <button
-				class=" p-1 dark:text-gray-300 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-full group-hover:visible invisible transition"
-				type="button"
-				on:click={() => {
-				}}
-			>
-				<GarbageBin />
-			</button> -->
+			</div>
 		</div>
 	{/if}
 </button>

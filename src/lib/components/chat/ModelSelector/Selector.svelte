@@ -534,6 +534,7 @@
 							<Tooltip content={$i18n.t('Cancel')}>
 								<button
 									class="text-gray-800 dark:text-gray-100"
+									aria-label="Cancel model pull"
 									onclick={() => {
 										cancelModelPullHandler(model);
 									}}
