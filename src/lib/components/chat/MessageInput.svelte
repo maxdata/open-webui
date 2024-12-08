@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { effect } from 'svelte';
+
 	import { run, preventDefault } from 'svelte/legacy';
 
 	import { toast } from 'svelte-sonner';
@@ -38,13 +40,6 @@
 	import RichTextInput from '../common/RichTextInput.svelte';
 
 	const i18n = getContext('i18n') as SvelteStore<any>;
-
-
-
-
-
-
-
 
 	let loaded = $state(false);
 	let recording = $state(false);
@@ -89,20 +84,18 @@
 		placeholder = ''
 	}: Props = $props();
 
-	let visionCapableModels: Model[] = [];
-	run(() => {
-		visionCapableModels = [...(atSelectedModel ? [atSelectedModel] : selectedModels)].filter(
+	effect(() => {
+		const visionCapableModels = [...(atSelectedModel ? [atSelectedModel] : selectedModels)].filter(
 			(model) => $models.find((m) => m.id === model)?.info?.meta?.capabilities?.vision ?? true
 		);
 	});
-
 	const scrollToBottom = () => {
 		const element = document.getElementById('messages-container');
 		if (element) {
-			element.scrollTo({
-				top: element.scrollHeight,
-				behavior: 'smooth'
-			});
+				element.scrollTo({
+					top: element.scrollHeight,
+					behavior: 'smooth'
+				});
 		}
 	};
 

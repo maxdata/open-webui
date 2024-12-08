@@ -843,7 +843,9 @@
 						autoplay
 						class="rounded-2xl h-full min-w-full object-cover object-center"
 						playsinline
-					></video>
+					>
+						<track kind="captions" src="path/to/your/captions.vtt" srclang="en" label="English" default>
+					</video>
 
 					<canvas id="camera-canvas" style="display:none;"></canvas>
 
