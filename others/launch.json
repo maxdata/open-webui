@@ -1,0 +1,42 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        // Backend
+        {
+            "name": "FastAPI",
+            "type": "debugpy",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "module": "uvicorn",
+            "args": [
+                "open_webui.main:app",
+                "--reload",
+                "--host", "0.0.0.0", 
+                "--port", "8080"
+            ],            
+            "justMyCode": true,
+        },
+        // node
+        {
+            "name": "node",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "npm run dev --inspect"
+        },
+        // chrome
+        {
+            "name": "chrome",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://127.0.0.1:5173",
+            "webRoot": "${workspaceFolder}",
+            "skipFiles": ["<node_internals>/**"]
+        }
+    ],
+    "compounds": [
+        {
+            "name": "svelte",
+            "configurations": ["node", "chrome"]
+        }
+    ]
+}
