@@ -1,3 +1,4 @@
+.svelte-kit/
 .DS_Store
 node_modules
 /build
@@ -307,3 +308,4 @@ dist
 cypress/videos
 cypress/screenshots
 .vscode/settings.json
+/.svelte-kit
